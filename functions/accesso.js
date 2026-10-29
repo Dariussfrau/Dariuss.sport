@@ -27,7 +27,8 @@ export async function onRequestGet({ env, request }) {
 export async function onRequestPost({ env, request }) {
   if (!adminConfigured(env)) return html(loginPage("La password di gestione non è ancora impostata."), 503);
   const form = await request.formData();
-  if (!safeEqual(String(form.get("password") || ""), env.ADMIN_PASSWORD)) {
+  // Spazi e a capo iniziali/finali ignorati: capita spesso con il copia-incolla.
+  if (!safeEqual(String(form.get("password") || "").trim(), String(env.ADMIN_PASSWORD).trim())) {
     await new Promise((r) => setTimeout(r, 800));
     return html(loginPage("Password non corretta."), 401);
   }
