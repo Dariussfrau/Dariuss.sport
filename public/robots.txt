@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /gestione
+Disallow: /accesso
+Disallow: /api/
+Disallow: /scarica/
