@@ -23,8 +23,7 @@ export const onRequestGet = withErrors(async ({ env, request }) => {
   <div class="wrap hero">
     <div>
       <div class="eyebrow">${SITE.tagline}</div>
-      <h1>Il calcio di provincia, <em>visto dal bordo campo.</em></h1>
-      <p class="lead">Album delle partite e appunti sulla giornata sportiva. Ti riconosci in uno scatto? Puoi scaricarlo gratis in HD.</p>
+      <h1>Album<br>e appunti<br><em>sulla giornata sportiva.</em></h1>
       <div class="btns"><a class="btn solid" href="#album">Guarda gli album</a><a class="btn" href="#articoli">Leggi gli articoli</a></div>
     </div>
     ${feature}
