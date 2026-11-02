@@ -21,19 +21,25 @@ h1,h2,h3{text-wrap:balance;margin:0}
 p{margin:0}
 .wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 
-/* Header */
-.head{border-bottom:1px solid var(--line);background:var(--cream)}
-.head-in{position:relative;display:flex;flex-direction:column;align-items:center;gap:20px;padding-block:34px 24px}
-.head .logo{font-size:clamp(44px,6vw,60px);letter-spacing:-.025em}
+/* Header: fascia del logo, linea, fascia del menu. Scorrendo il logo grande esce e il menu resta fisso in alto. */
+.head{background:var(--cream);border-bottom:1px solid var(--line);z-index:20}
+.js .head{position:sticky;top:calc(env(safe-area-inset-top,0px) - var(--brand-h,0px));transition:box-shadow .25s}
+.head.stuck{box-shadow:0 8px 20px rgba(30,58,30,.08)}
+.brand{border-bottom:1px solid var(--line)}
+.brand-in{position:relative;display:flex;flex-direction:column;align-items:center;padding-block:44px 38px}
+.brand .logo{font-size:clamp(54px,7.6vw,96px);letter-spacing:-.03em}
+.menu-in{position:relative;display:flex;justify-content:center;align-items:center;padding-block:12px}
+.mini-logo{position:absolute;left:max(16px,env(safe-area-inset-left,0px));font-size:22px;opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .25s,transform .25s}
+.head.stuck .mini-logo{opacity:1;transform:none;pointer-events:auto}
 .logo{display:inline-flex;align-items:baseline;gap:.28em;font-family:var(--display);font-weight:800;font-size:25px;letter-spacing:-.015em;line-height:1;text-decoration:none}
 .logo .d{color:var(--green)}
 .logo .s{color:var(--forest)}
-/* Menu a pulsanti: contorno leggero al passaggio, riempimento verde per la pagina attuale e alla pressione */
+/* Menu a pulsanti: si accende di verde al passaggio del mouse, alla pressione e sulla pagina attuale */
 .menu{display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
-.menu a{font:600 14px/1 var(--display);letter-spacing:.04em;color:var(--forest);text-decoration:none;padding:11px 20px;border-radius:999px;border:1.5px solid transparent;-webkit-tap-highlight-color:transparent;transition:background-color .2s,color .2s,border-color .2s}
-.menu a:hover{border-color:rgba(67,112,63,.45);background:rgba(67,112,63,.07)}
-.menu a[aria-current="page"],.menu a:active{background:var(--green);border-color:var(--green);color:var(--cream)}
-.ig-corner{position:absolute;top:20px;right:max(16px,env(safe-area-inset-right,0px));font:600 13px/1 var(--display);color:var(--green);text-decoration:none;padding:8px 0}
+.menu a{font:600 14px/1 var(--display);letter-spacing:.05em;color:var(--forest);text-decoration:none;padding:11px 22px;border-radius:999px;border:1.5px solid transparent;-webkit-tap-highlight-color:transparent;transition:background-color .2s,color .2s,border-color .2s}
+.menu a[aria-current="page"],.menu a:active,.menu a:focus-visible{background:var(--green);border-color:var(--green);color:var(--cream)}
+@media (hover:hover){.menu a:hover{background:var(--green);border-color:var(--green);color:var(--cream)}}
+.ig-corner{position:absolute;top:18px;right:max(16px,env(safe-area-inset-right,0px));font:600 13px/1 var(--display);color:var(--green);text-decoration:none;padding:8px 0}
 .ig-corner:hover{text-decoration:underline}
 
 /* Shared bits */
@@ -174,17 +180,23 @@ section.block{padding-block:56px;border-top:1px solid var(--line)}
 .login-box h1{font:800 32px/1.1 var(--display);color:var(--forest);margin-bottom:8px}
 .login-box input{margin-top:0}
 
+@media (max-width:760px){.mini-logo{display:none}}
 @media (max-width:860px){
   .hero,.about{grid-template-columns:1fr;gap:32px}
   .hero{padding-block:40px 48px}
 }
 @media (max-width:560px){
   .row{grid-template-columns:minmax(0,1fr);gap:6px}
-  .head-in{gap:14px;padding-block:14px 18px}
-  .head .logo{font-size:42px}
-  .ig-corner{position:static;order:-1;font-size:12px;padding:0}
+  .brand-in{padding-block:14px 22px}
+  .ig-corner{position:static;order:-1;font-size:12px;padding:0 0 12px}
+  .menu-in{padding-block:10px}
   .menu{gap:4px}
   .menu a{font-size:13.5px;padding:10px 13px;letter-spacing:.02em}
   .dlg .box{padding:20px}
+}
+/* Foto e album che emergono scorrendo (solo se il browser non chiede di ridurre il movimento) */
+@media (prefers-reduced-motion:no-preference){
+  .js .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .8s cubic-bezier(.2,.7,.2,1)}
+  .js .reveal.in,.js.reveal-all .reveal{opacity:1;transform:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}

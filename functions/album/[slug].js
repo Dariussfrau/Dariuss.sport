@@ -19,7 +19,7 @@ export const onRequestGet = withErrors(async ({ env, params, request }) => {
     name: downloadName(album.slug, i + 1),
   }));
 
-  const gallery = items.map((p, i) => `<figure>
+  const gallery = items.map((p, i) => `<figure class="reveal">
     <button class="open" type="button" data-photo="${i}" aria-label="Apri foto ${i + 1} di ${items.length}">
       <img src="${p.src}" alt="${esc(album.title)}, foto ${i + 1}" width="${p.w}" height="${p.h}" loading="${i < 6 ? "eager" : "lazy"}">
     </button>

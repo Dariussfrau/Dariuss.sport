@@ -25,7 +25,9 @@ Il proprietario non è uno sviluppatore: parla italiano, spiega le modifiche in 
 
 - Colori: crema `#F2EEE6` (sfondo), verde `#43703F` (accento, "D." del logo), verde scuro `#1E3A1E` (titoli, footer), salvia `#7A8A78` (testo secondario), menta `#A9C79A` (logo su fondo scuro).
 - Logo del sito: **"D. Sport"**, Montserrat 800, "D." verde `#43703F` + "Sport" verde scuro `#1E3A1E` (su fondo scuro: menta + crema). Sotto, quando serve, "FOTOGRAFIA SPORTIVA" spaziato in salvia.
-- Intestazione: logo grande **centrato**, menu centrato sotto (Home · Album · Articoli · Chi sono) a pulsanti arrotondati; la voce della pagina attuale ha il **riempimento verde** `#43703F` (`aria-current="page"`), così come la voce premuta.
+- Intestazione: logo **molto grande e centrato**, una linea, poi il menu centrato (Home · Album · Articoli · Chi sono) a pulsanti arrotondati che si **riempiono di verde** `#43703F` al passaggio del mouse, alla pressione e sulla pagina attuale (`aria-current="page"`). Scorrendo, il logo grande esce e la fascia del menu resta fissa in alto con un logo piccolo a sinistra (da 760 px in su).
+- Animazioni approvate: intestazione che resta fissa scorrendo e **dissolvenza** di foto e album (classe `.reveal`) quando entrano nello schermo. Rispettano `prefers-reduced-motion`.
+- Dopo ogni modifica a `site.css` o `site.js` aumenta `ASSET_VERSION` in `src/templates.js`, altrimenti i browser possono mostrare la versione vecchia.
 - **@dariuss.sport** è il nome Instagram: compare nell'angolo in alto a destra (su telefono sopra il logo) e nel footer, sempre come collegamento alla pagina Instagram.
 - Caratteri: **Montserrat** (titoli, logo), **Poppins** (testo), **Newsreader** (testi lunghi, articoli).
 - **Nessuna filigrana** sulle foto: il proprietario l'ha tolta. Non reintrodurla senza sua richiesta.

@@ -2,6 +2,36 @@
 // Su iPhone serve un ascoltatore touch perché i pulsanti del menu si "accendano" alla pressione.
 document.addEventListener("touchstart", () => {}, { passive: true });
 
+// Intestazione e animazioni di comparsa.
+(() => {
+  // Il logo grande scorre via e la fascia del menu resta fissa in alto, con un logo piccolo.
+  const head = document.getElementById("head");
+  const brand = head && head.querySelector(".brand");
+  if (head && brand) {
+    let brandH = 0, ticking = false;
+    const update = () => { head.classList.toggle("stuck", window.scrollY >= brandH - 2); ticking = false; };
+    const measure = () => { brandH = brand.offsetHeight; head.style.setProperty("--brand-h", `${brandH}px`); update(); };
+    window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    window.addEventListener("resize", measure);
+    if (document.fonts) document.fonts.ready.then(measure);
+    measure();
+  }
+
+  // Foto e album emergono con una dissolvenza quando entrano nello schermo.
+  const items = document.querySelectorAll(".reveal");
+  if (!("IntersectionObserver" in window)) { items.forEach((el) => el.classList.add("in")); return; }
+  const io = new IntersectionObserver((entries) => {
+    let n = 0;
+    for (const e of entries) {
+      if (!e.isIntersecting) continue;
+      e.target.style.transitionDelay = `${Math.min(n++, 5) * 70}ms`;
+      e.target.classList.add("in");
+      io.unobserve(e.target);
+    }
+  }, { rootMargin: "0px 0px -6% 0px" });
+  items.forEach((el) => io.observe(el));
+})();
+
 (() => {
   const dataEl = document.getElementById("album-data");
   const dlg = document.getElementById("dlg");

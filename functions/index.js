@@ -13,7 +13,7 @@ export const onRequestGet = withErrors(async ({ env, request }) => {
   const origin = new URL(request.url).origin;
 
   const feature = latest
-    ? `<a class="feature" href="/album/${esc(latest.slug)}">
+    ? `<a class="feature reveal" href="/album/${esc(latest.slug)}">
         <div class="cover tall">${latest.cover_key ? `<img src="${photoUrl(latest.cover_key)}" alt="" width="1280" height="1600">` : `<div class="empty-cover">${logo("span", "")}</div>`}</div>
         <div class="cap"><span><b>${esc(latest.title)}</b><br>${[esc(latest.competition), formatDate(latest.date)].filter(Boolean).join(" · ")}</span><span>${latest.photo_count} foto →</span></div>
       </a>`

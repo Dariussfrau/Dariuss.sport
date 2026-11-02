@@ -7,17 +7,25 @@ const FONTS = "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;
 export const logo = (tag = "a", attrs = 'href="/"') =>
   `<${tag} class="logo" ${attrs} aria-label="${SITE.name}, home"><span class="d">D.</span><span class="s">Sport</span></${tag}>`;
 
+// Da aumentare a ogni modifica di site.css / site.js: obbliga i browser a scaricare la versione nuova.
+const ASSET_VERSION = "4";
+
 const MENU = [["home", "/", "Home"], ["album", "/album", "Album"], ["articoli", "/articoli", "Articoli"], ["chi-sono", "/#chi-sono", "Chi sono"]];
 
-// Logo grande al centro, menu centrato sotto; la voce della pagina attuale è "accesa" in verde.
+// Logo grande al centro; sotto, separato da una linea, il menu centrato che resta fisso in alto scorrendo.
 function header(active) {
-  return `<header class="head"><div class="wrap head-in">
-  <a class="ig-corner" href="${SITE.instagram}" target="_blank" rel="noopener" aria-label="Instagram ${SITE.handle}">${SITE.handle} ↗</a>
-  ${logo()}
-  <nav class="menu" aria-label="Menu principale">
-    ${MENU.map(([key, href, label]) => `<a href="${href}"${key === active ? ' aria-current="page"' : ""}>${label}</a>`).join("\n    ")}
-  </nav>
-</div></header>`;
+  return `<header class="head" id="head">
+  <div class="brand"><div class="wrap brand-in">
+    <a class="ig-corner" href="${SITE.instagram}" target="_blank" rel="noopener" aria-label="Instagram ${SITE.handle}">${SITE.handle} ↗</a>
+    ${logo()}
+  </div></div>
+  <div class="menu-band"><div class="wrap menu-in">
+    <a class="logo mini-logo" href="/" tabindex="-1" aria-hidden="true"><span class="d">D.</span><span class="s">Sport</span></a>
+    <nav class="menu" aria-label="Menu principale">
+      ${MENU.map(([key, href, label]) => `<a href="${href}"${key === active ? ' aria-current="page"' : ""}>${label}</a>`).join("\n      ")}
+    </nav>
+  </div></div>
+</header>`;
 }
 
 function footer() {
@@ -46,7 +54,8 @@ ${image ? `<meta property="og:image" content="${esc(image)}"><meta name="twitter
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="${FONTS}">
-<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/site.css?v=${ASSET_VERSION}">
+<script>document.documentElement.classList.add("js");setTimeout(function(){document.documentElement.classList.add("reveal-all")},3000);</script>
 </head>
 <body>
 ${header(active)}
@@ -55,7 +64,7 @@ ${footer()}
 <div class="dlg" id="dlg" hidden role="dialog" aria-modal="true" aria-labelledby="dlg-title"></div>
 <div class="toast" id="toast" hidden role="status"></div>
 <script>window.SITE_TERMS = ${JSON.stringify(SITE.terms)};</script>
-<script src="/assets/site.js" defer></script>
+<script src="/assets/site.js?v=${ASSET_VERSION}" defer></script>
 ${scripts}
 </body>
 </html>`;
@@ -65,7 +74,7 @@ export function albumCard(a) {
   const cover = a.cover_key
     ? `<img src="${photoUrl(a.cover_key, "thumb")}" alt="" loading="lazy" width="640" height="480">`
     : `<div class="empty-cover" aria-hidden="true">${logo("span", "")}</div>`;
-  return `<a class="card" href="/album/${esc(a.slug)}">
+  return `<a class="card reveal" href="/album/${esc(a.slug)}">
   <div class="cover">${cover}</div>
   <div class="meta">${a.competition ? `<span class="chip">${esc(a.competition)}</span>` : ""}<span>${formatDate(a.date)}</span></div>
   <h3>${esc(a.title)}</h3>
