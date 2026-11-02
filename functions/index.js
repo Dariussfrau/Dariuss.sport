@@ -55,6 +55,7 @@ export const onRequestGet = withErrors(async ({ env, request }) => {
 </main>`;
 
   return html(page({
+    active: "home",
     title: "",
     url: origin + "/",
     image: latest?.cover_key ? origin + photoUrl(latest.cover_key) : "",

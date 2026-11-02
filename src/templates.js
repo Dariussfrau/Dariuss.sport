@@ -7,14 +7,15 @@ const FONTS = "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;
 export const logo = (tag = "a", attrs = 'href="/"') =>
   `<${tag} class="logo" ${attrs} aria-label="${SITE.name}, home"><span class="d">D.</span><span class="s">Sport</span></${tag}>`;
 
-function header() {
+const MENU = [["home", "/", "Home"], ["album", "/album", "Album"], ["articoli", "/articoli", "Articoli"], ["chi-sono", "/#chi-sono", "Chi sono"]];
+
+// Logo grande al centro, menu centrato sotto; la voce della pagina attuale è "accesa" in verde.
+function header(active) {
   return `<header class="head"><div class="wrap head-in">
+  <a class="ig-corner" href="${SITE.instagram}" target="_blank" rel="noopener" aria-label="Instagram ${SITE.handle}">${SITE.handle} ↗</a>
   ${logo()}
-  <nav aria-label="Menu principale">
-    <a href="/album">Album</a>
-    <a href="/articoli">Articoli</a>
-    <a href="/#chi-sono">Chi sono</a>
-    <a class="ig" href="${SITE.instagram}" target="_blank" rel="noopener" aria-label="Instagram ${SITE.handle}">${SITE.handle} ↗</a>
+  <nav class="menu" aria-label="Menu principale">
+    ${MENU.map(([key, href, label]) => `<a href="${href}"${key === active ? ' aria-current="page"' : ""}>${label}</a>`).join("\n    ")}
   </nav>
 </div></header>`;
 }
@@ -26,7 +27,7 @@ function footer() {
 </div></footer>`;
 }
 
-export function page({ title, description = SITE.description, image = "", url = "", body, scripts = "" }) {
+export function page({ title, description = SITE.description, image = "", url = "", body, scripts = "", active = "" }) {
   const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} · ${SITE.tagline}`;
   return `<!doctype html>
 <html lang="it">
@@ -48,7 +49,7 @@ ${image ? `<meta property="og:image" content="${esc(image)}"><meta name="twitter
 <link rel="stylesheet" href="/assets/site.css">
 </head>
 <body>
-${header()}
+${header(active)}
 ${body}
 ${footer()}
 <div class="dlg" id="dlg" hidden role="dialog" aria-modal="true" aria-labelledby="dlg-title"></div>

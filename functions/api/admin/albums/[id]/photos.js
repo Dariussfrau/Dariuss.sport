@@ -2,7 +2,7 @@ import { photoRow } from "../../../../../src/admin-data.js";
 import { getBucket, getDb } from "../../../../../src/db.js";
 import { json, safeJson } from "../../../../../src/util.js";
 
-// Riceve una foto già preparata dal browser: miniatura, anteprima, HD con filigrana e originale.
+// Riceve una foto già preparata dal browser: miniatura, anteprima, HD e originale.
 export async function onRequestPost({ env, params, request }) {
   const DB = await getDb(env);
   const bucket = getBucket(env);

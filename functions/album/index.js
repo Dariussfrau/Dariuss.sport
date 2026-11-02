@@ -9,5 +9,5 @@ export const onRequestGet = withErrors(async ({ env, request }) => {
   <div class="d-head"><div class="eyebrow">Archivio</div><h1>Album</h1><p>${results.length} album. Apri una partita per vedere le foto e scaricare le tue in HD.</p></div>
   ${results.length ? `<div class="grid">${results.map(albumCard).join("")}</div>` : `<p class="empty">Nessun album pubblicato per ora.</p>`}
 </main>`;
-  return html(page({ title: "Album", url: request.url, body }));
+  return html(page({ active: "album", title: "Album", url: request.url, body }));
 });

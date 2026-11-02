@@ -33,10 +33,10 @@ export const onRequestGet = withErrors(async ({ env, params, request }) => {
   ].join("");
 
   const albumDownload = album.password_hash && photos.length
-    ? `<div class="dlbar"><p><b>Scarica le tue foto.</b> Ogni foto si scarica gratis in HD (2048 px, con filigrana). L'album completo richiede la password che ricevi da me.</p>
+    ? `<div class="dlbar"><p><b>Scarica le tue foto.</b> Ogni foto si scarica gratis in HD (2048 px). L'album completo richiede la password che ricevi da me.</p>
         <button class="btn solid" type="button" data-album-dl>Scarica l'album completo</button></div>`
     : photos.length
-      ? `<div class="dlbar"><p><b>Scarica le tue foto.</b> Ogni foto si scarica gratis in HD (2048 px, con filigrana).</p></div>`
+      ? `<div class="dlbar"><p><b>Scarica le tue foto.</b> Ogni foto si scarica gratis in HD (2048 px).</p></div>`
       : "";
 
   const data = JSON.stringify({ slug: album.slug, title: album.title, photos: items }).replace(/</g, "\\u003c");
@@ -56,6 +56,7 @@ export const onRequestGet = withErrors(async ({ env, params, request }) => {
 <script type="application/json" id="album-data">${data}</script>`;
 
   return html(page({
+    active: "album",
     title: album.title,
     description: album.intro || `${album.competition} · ${formatDate(album.date)} · ${photos.length} foto`,
     url: request.url,

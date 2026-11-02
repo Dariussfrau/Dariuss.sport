@@ -8,10 +8,10 @@ Il proprietario non è uno sviluppatore: parla italiano, spiega le modifiche in 
 - **Cloudflare Pages** con **Pages Functions** (`functions/`), nessun passo di build, nessun framework, nessun `package.json`.
 - **D1** (binding `DB`): tabelle `albums`, `photos`, `articles`. Lo schema si crea da solo in `src/db.js` (`CREATE TABLE IF NOT EXISTS`). Per aggiungere colonne usa `ALTER TABLE` idempotente nello stesso punto, mai migrazioni manuali.
 - **R2** (binding `BUCKET`):
-  - `photos/{albumId}/{uuid}/thumb.jpg` (640 px), `display.jpg` (1600 px, senza filigrana, mostrata sul sito), `hd.jpg` (2048 px, con filigrana, download gratuito)
+  - `photos/{albumId}/{uuid}/thumb.jpg` (640 px), `display.jpg` (1600 px, senza filigrana, mostrata sul sito), `hd.jpg` (2048 px, download gratuito)
   - `originals/{albumId}/{uuid}`: originale privato, per la futura vendita in massima qualità. **Mai** servirlo pubblicamente.
   - `articles/{uuid}/display.jpg|thumb.jpg`: copertine articoli.
-- Le versioni delle foto e la filigrana sono generate **nel browser** in `public/assets/admin.js` (canvas), così il server resta nei limiti CPU del piano gratuito. Anche lo ZIP dell'album completo è composto nel browser (`public/assets/site.js`).
+- Le versioni delle foto sono generate **nel browser** in `public/assets/admin.js` (canvas), così il server resta nei limiti CPU del piano gratuito. Anche lo ZIP dell'album completo è composto nel browser (`public/assets/site.js`).
 - Segreti: `ADMIN_PASSWORD` (accesso a `/gestione`) e `SESSION_SECRET` (firma del cookie). Le password degli album sono salvate come `sale:sha256`.
 
 ## Regole
@@ -25,9 +25,10 @@ Il proprietario non è uno sviluppatore: parla italiano, spiega le modifiche in 
 
 - Colori: crema `#F2EEE6` (sfondo), verde `#43703F` (accento, "D." del logo), verde scuro `#1E3A1E` (titoli, footer), salvia `#7A8A78` (testo secondario), menta `#A9C79A` (logo su fondo scuro).
 - Logo del sito: **"D. Sport"**, Montserrat 800, "D." verde `#43703F` + "Sport" verde scuro `#1E3A1E` (su fondo scuro: menta + crema). Sotto, quando serve, "FOTOGRAFIA SPORTIVA" spaziato in salvia.
-- **@dariuss.sport** è il nome Instagram: compare nel menu in alto a destra, nel footer e nella filigrana, sempre come collegamento alla pagina Instagram.
+- Intestazione: logo grande **centrato**, menu centrato sotto (Home · Album · Articoli · Chi sono) a pulsanti arrotondati; la voce della pagina attuale ha il **riempimento verde** `#43703F` (`aria-current="page"`), così come la voce premuta.
+- **@dariuss.sport** è il nome Instagram: compare nell'angolo in alto a destra (su telefono sopra il logo) e nel footer, sempre come collegamento alla pagina Instagram.
 - Caratteri: **Montserrat** (titoli, logo), **Poppins** (testo), **Newsreader** (testi lunghi, articoli).
-- Filigrana: "D. Sport" Montserrat 800 e sotto "@dariuss.sport" Montserrat 500, bianco 88%, ombra leggera, allineata a destra in basso, altezza ≈3% del lato lungo.
+- **Nessuna filigrana** sulle foto: il proprietario l'ha tolta. Non reintrodurla senza sua richiesta.
 - Il proprietario ha chiesto di non cambiare colori, dimensioni dei titoli e ordine delle sezioni senza sua richiesta.
 
 ## Provare in locale

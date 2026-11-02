@@ -1,7 +1,7 @@
 import { getBucket, getDb } from "../../src/db.js";
 import { downloadName } from "../../src/util.js";
 
-// Download gratuito di una foto in HD (2048 px, con filigrana).
+// Download gratuito di una foto in HD (2048 px).
 export async function onRequestGet({ env, params }) {
   try {
     const DB = await getDb(env);

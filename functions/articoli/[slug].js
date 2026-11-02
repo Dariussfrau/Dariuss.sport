@@ -23,6 +23,7 @@ export const onRequestGet = withErrors(async ({ env, params, request }) => {
 </main>`;
 
   return html(page({
+    active: "articoli",
     title: a.title,
     description: a.excerpt || "",
     url: request.url,

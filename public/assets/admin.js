@@ -1,6 +1,6 @@
 // Pannello di gestione: album, foto, articoli.
 // Le foto vengono preparate nel browser (iPhone o PC) prima del caricamento:
-//   thumb 640 px · display 1600 px (sul sito) · hd 2048 px con filigrana (download gratuito) · originale (privato).
+//   thumb 640 px · display 1600 px (sul sito) · hd 2048 px (download gratuito) · originale (privato).
 (() => {
   const app = document.getElementById("app");
   const toastEl = document.getElementById("toast");
@@ -122,7 +122,7 @@
       <label class="drop" id="drop" for="f-files">
         <input id="f-files" class="sr-only" type="file" accept="image/*" multiple>
         <b>Aggiungi foto</b>
-        <span>Tocca per sceglierle dal telefono o dal computer, oppure trascinale qui. Usa le JPG esportate da Lightroom: il sito prepara da solo le versioni per il web e l'HD con filigrana.</span>
+        <span>Tocca per sceglierle dal telefono o dal computer, oppure trascinale qui. Usa le JPG esportate da Lightroom: il sito prepara da solo le versioni per il web e per il download in HD.</span>
       </label>
       <ul class="queue" id="queue"></ul>
       <div class="pgrid" id="pgrid"></div>
@@ -216,7 +216,6 @@
       // In ordine di scatto, poi per nome file.
       items.sort((a, b) => (a.exif.taken || "").localeCompare(b.exif.taken || "") || a.file.name.localeCompare(b.file.name, undefined, { numeric: true }));
       queue.innerHTML = items.map((it, i) => `<li id="q-${i}"><span class="name">${esc(it.file.name)}</span><span class="st">In attesa</span></li>`).join("");
-      await fontsReady;
       let ok = 0;
       for (let i = 0; i < items.length; i++) {
         const row = document.getElementById(`q-${i}`), st = row.querySelector(".st");
@@ -352,10 +351,6 @@
   }
 
   /* ================= Preparazione immagini ================= */
-  const fontsReady = document.fonts
-    ? Promise.all([document.fonts.load("800 40px Montserrat"), document.fonts.load("500 40px Montserrat")]).catch(() => {})
-    : Promise.resolve();
-
   async function loadImage(file) {
     const url = URL.createObjectURL(file);
     const img = new Image();
@@ -380,34 +375,13 @@
   const toJpeg = (canvas, quality) => new Promise((resolve, reject) =>
     canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("Conversione dell'immagine non riuscita."))), "image/jpeg", quality));
 
-  // Filigrana in basso a destra: logo "D. Sport" e, sotto, l'Instagram "@dariuss.sport".
-  function watermark(canvas) {
-    const ctx = canvas.getContext("2d");
-    const size = Math.round(Math.max(canvas.width, canvas.height) * 0.03);
-    const margin = Math.round(size * 0.9);
-    const x = canvas.width - margin, y2 = canvas.height - margin, y1 = y2 - size * 0.62;
-    ctx.save();
-    ctx.shadowColor = "rgba(0,0,0,0.45)";
-    ctx.shadowBlur = size * 0.3;
-    ctx.fillStyle = "rgba(255,255,255,0.88)";
-    ctx.textAlign = "right";
-    ctx.textBaseline = "alphabetic";
-    ctx.font = `800 ${size}px Montserrat, Arial, sans-serif`;
-    ctx.fillText("D. Sport", x, y1);
-    ctx.font = `500 ${Math.round(size * 0.42)}px Montserrat, Arial, sans-serif`;
-    ctx.fillText("@dariuss.sport", x, y2);
-    ctx.restore();
-  }
-
   async function prepareVersions(file, { hd = true } = {}) {
     const { img, release } = await loadImage(file);
     try {
       const W = img.naturalWidth, H = img.naturalHeight;
       const out = { width: W, height: H };
       if (hd) {
-        const hdCanvas = scaled(img, W, H, SIZES.hd);
-        watermark(hdCanvas);
-        out.hd = await toJpeg(hdCanvas, 0.9);
+        out.hd = await toJpeg(scaled(img, W, H, SIZES.hd), 0.9);
       }
       const display = scaled(img, W, H, SIZES.display);
       out.display = await toJpeg(display, 0.85);

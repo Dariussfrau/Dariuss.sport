@@ -9,5 +9,5 @@ export const onRequestGet = withErrors(async ({ env, request }) => {
   <div class="d-head"><div class="eyebrow">Taccuino</div><h1>Articoli</h1><p>Racconti e note dalla giornata sportiva.</p></div>
   ${results.length ? `<div class="list">${results.map(articleRow).join("")}</div>` : `<p class="empty">Nessun articolo per ora.</p>`}
 </main>`;
-  return html(page({ title: "Articoli", url: request.url, body }));
+  return html(page({ active: "articoli", title: "Articoli", url: request.url, body }));
 });
