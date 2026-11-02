@@ -5,7 +5,7 @@ import { SetupError } from "./db.js";
 const FONTS = "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap";
 
 export const logo = (tag = "a", attrs = 'href="/"') =>
-  `<${tag} class="logo" ${attrs} aria-label="${SITE.name}, home"><span class="d">Dariuss</span><span class="s">.sport</span></${tag}>`;
+  `<${tag} class="logo" ${attrs} aria-label="${SITE.name}, home"><span class="d">D.</span><span class="s">Sport</span></${tag}>`;
 
 function header() {
   return `<header class="head"><div class="wrap head-in">
@@ -14,14 +14,14 @@ function header() {
     <a href="/album">Album</a>
     <a href="/articoli">Articoli</a>
     <a href="/#chi-sono">Chi sono</a>
-    <a href="${SITE.instagram}" target="_blank" rel="noopener">Instagram ↗</a>
+    <a class="ig" href="${SITE.instagram}" target="_blank" rel="noopener" aria-label="Instagram ${SITE.handle}">${SITE.handle} ↗</a>
   </nav>
 </div></header>`;
 }
 
 function footer() {
   return `<footer class="foot"><div class="wrap">
-  <div class="foot-top">${logo("span", "")}<small>${SITE.tagline}</small><a href="${SITE.instagram}" target="_blank" rel="noopener">${SITE.handle}</a></div>
+  <div class="foot-top">${logo("span", "")}<small>${SITE.tagline}</small><a class="ig" href="${SITE.instagram}" target="_blank" rel="noopener">Seguimi su Instagram · ${SITE.handle} ↗</a></div>
   <div class="legal"><span>© ${new Date().getFullYear()} ${SITE.name}. ${SITE.copyright}</span><span>${SITE.removal}</span></div>
 </div></footer>`;
 }

@@ -1,4 +1,4 @@
-/* Pannello di gestione Dariuss.sport: stessi colori del sito, interfaccia essenziale e comoda da telefono. */
+/* Pannello di gestione D. Sport: stessi colori del sito, interfaccia essenziale e comoda da telefono. */
 :root{
   --cream:#F2EEE6; --paper:#FBF9F5; --green:#43703F; --forest:#1E3A1E; --sage:#7A8A78; --ink:#18221A;
   --line:rgba(30,58,30,.14); --danger:#a33a2a; --ok:#2f6b2b;
@@ -27,8 +27,8 @@ code{font-size:12px;background:rgba(30,58,30,.08);padding:1px 5px;border-radius:
 
 .bar{background:var(--forest);color:var(--cream);position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
 .bar-in{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:14px;flex-wrap:wrap}
-.logo{display:inline-flex;align-items:baseline;gap:1px;font-family:var(--display);text-decoration:none;line-height:1}
-.logo .d{font-weight:800;font-size:20px;color:#A9C79A} .logo .s{font-size:15px}
+.logo{display:inline-flex;align-items:baseline;gap:.28em;font-family:var(--display);font-weight:800;font-size:20px;text-decoration:none;line-height:1}
+.logo .d{color:#A9C79A} .logo .s{color:var(--cream)}
 .logo .tag{font:600 10px/1 var(--body);letter-spacing:.2em;text-transform:uppercase;margin-left:10px;opacity:.7}
 .bar nav{display:flex;gap:16px;font:500 14px/1 var(--display)}
 .bar nav a{text-decoration:none;opacity:.9}

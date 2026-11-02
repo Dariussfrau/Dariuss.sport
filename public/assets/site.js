@@ -77,8 +77,8 @@
     const p = photos[i];
     termsDialog({
       title: "Prima di scaricare",
-      preview: `<div class="pv"><img src="${p.src}" alt=""><div class="wm"><b>Dariuss</b><span>.sport</span></div></div>`,
-      rows: [["File", p.name], ["Formato", "JPG · 2048 px lato lungo"], ["Filigrana", "Sì, Dariuss.sport"], ["Costo", "Gratis"]],
+      preview: `<div class="pv"><img src="${p.src}" alt=""><div class="wm"><b>D. Sport</b><span>@dariuss.sport</span></div></div>`,
+      rows: [["File", p.name], ["Formato", "JPG · 2048 px lato lungo"], ["Filigrana", "Sì, D. Sport · @dariuss.sport"], ["Costo", "Gratis"]],
       onOk: () => {
         closeDlg();
         saveBlob(`/scarica/${p.id}`, p.name);
@@ -113,7 +113,7 @@
         if (!res.ok) throw new Error(data.error || "Password non corretta.");
         termsDialog({
           title: "Album sbloccato",
-          rows: [["File", data.zipName], ["Contenuto", `${data.files.length} foto · JPG 2048 px`], ["Peso stimato", `circa ${Math.max(1, Math.round(data.files.length * 1.3))} MB`], ["Filigrana", "Sì, Dariuss.sport"]],
+          rows: [["File", data.zipName], ["Contenuto", `${data.files.length} foto · JPG 2048 px`], ["Peso stimato", `circa ${Math.max(1, Math.round(data.files.length * 1.3))} MB`], ["Filigrana", "Sì, D. Sport · @dariuss.sport"]],
           onOk: () => buildZip(data),
         });
       } catch (ex) {

@@ -1,6 +1,6 @@
 // Testi e dati fissi del sito. Modifica qui nome, bio, attrezzatura e note legali.
 export const SITE = {
-  name: "Dariuss.sport",
+  name: "D. Sport",
   tagline: "Fotografia sportiva",
   description: "Il calcio di provincia visto dal bordo campo: album delle partite da scaricare in HD e racconti dalla giornata sportiva.",
   instagram: "https://www.instagram.com/dariuss.sport/",

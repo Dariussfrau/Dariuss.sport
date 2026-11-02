@@ -1,4 +1,4 @@
-/* Dariuss.sport · stile "Campo chiaro" (proposta A).
+/* D. Sport (@dariuss.sport) · stile "Campo chiaro" (proposta A).
    Colori del brand: crema, verde, verde scuro, salvia. Caratteri: Montserrat (titoli e logo), Poppins (testo), Newsreader (lettura). */
 :root{
   --cream:#F2EEE6; --green:#43703F; --forest:#1E3A1E; --sage:#7A8A78; --ink:#18221A; --mint:#A9C79A;
@@ -24,12 +24,13 @@ p{margin:0}
 /* Header */
 .head{border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);background:rgba(242,238,230,.94);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);z-index:20}
 .head-in{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:16px;flex-wrap:wrap}
-.logo{display:inline-flex;align-items:baseline;gap:1px;font-family:var(--display);line-height:1;text-decoration:none}
-.logo .d{font-weight:800;font-size:24px;letter-spacing:-.01em;color:var(--green)}
-.logo .s{font-weight:400;font-size:18px;color:var(--forest)}
+.logo{display:inline-flex;align-items:baseline;gap:.28em;font-family:var(--display);font-weight:800;font-size:25px;letter-spacing:-.015em;line-height:1;text-decoration:none}
+.logo .d{color:var(--green)}
+.logo .s{color:var(--forest)}
 .head nav{display:flex;gap:22px;flex-wrap:wrap;font:500 14px/1 var(--display);color:var(--forest)}
 .head nav a{text-decoration:none;padding-block:6px;border-bottom:2px solid transparent}
 .head nav a:hover{border-color:var(--green)}
+.head nav .ig{color:var(--green);font-weight:600}
 
 /* Shared bits */
 .eyebrow{font:500 12px/1 var(--body);letter-spacing:.32em;text-transform:uppercase;color:var(--sage)}
@@ -42,7 +43,7 @@ p{margin:0}
 .chip{font:600 11px/1 var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--green);border:1px solid rgba(67,112,63,.4);padding:5px 8px;border-radius:999px}
 .empty{color:var(--muted);font-size:15px;padding-block:12px}
 .empty-cover{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#e6e0d4}
-.empty-cover .logo .d{font-size:22px}
+.empty-cover .logo{font-size:22px}
 
 /* Home */
 .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;padding-block:64px 72px}
@@ -88,6 +89,8 @@ section.block{padding-block:56px;border-top:1px solid var(--line)}
 .foot .wrap{display:grid;gap:22px;padding-block:36px calc(36px + env(safe-area-inset-bottom,0px))}
 .foot-top{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
 .foot .logo .d{color:var(--mint)} .foot .logo .s{color:var(--cream)}
+.foot .ig{font:600 14px/1.3 var(--display);color:var(--mint);text-decoration:none}
+.foot .ig:hover{text-decoration:underline}
 .foot small{opacity:.7;font-size:12px;letter-spacing:.2em;text-transform:uppercase}
 .legal{font-size:13px;line-height:1.6;color:rgba(242,238,230,.75);border-top:1px solid rgba(242,238,230,.15);padding-top:18px;display:grid;gap:6px;max-width:80ch}
 
@@ -146,8 +149,8 @@ section.block{padding-block:56px;border-top:1px solid var(--line)}
 .dlg h2{font:800 22px/1.2 var(--display);color:var(--forest)}
 .dlg .pv{position:relative;border-radius:4px;overflow:hidden;background:#e6e0d4}
 .dlg .pv img{width:100%;max-height:260px;object-fit:cover}
-.wm{position:absolute;right:4%;bottom:5%;font-family:var(--display);line-height:1;color:rgba(255,255,255,.9);text-shadow:0 1px 6px rgba(0,0,0,.45);display:flex;align-items:baseline}
-.wm b{font-weight:800;font-size:18px} .wm span{font-weight:400;font-size:14px}
+.wm{position:absolute;right:4%;bottom:5%;font-family:var(--display);line-height:1.1;color:rgba(255,255,255,.9);text-shadow:0 1px 6px rgba(0,0,0,.45);display:grid;justify-items:end}
+.wm b{font-weight:800;font-size:19px;letter-spacing:-.01em} .wm span{font-weight:500;font-size:11px}
 .dlg dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 16px;margin:0;font-size:14px}
 .dlg dt{color:var(--sage)} .dlg dd{margin:0;color:var(--forest);font-weight:500;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
 .terms{font-family:var(--serif);font-size:16px;line-height:1.55;color:#2c372e;background:rgba(255,255,255,.55);border:1px solid var(--line);border-radius:6px;padding:14px 16px}

@@ -353,7 +353,7 @@
 
   /* ================= Preparazione immagini ================= */
   const fontsReady = document.fonts
-    ? Promise.all([document.fonts.load("800 40px Montserrat"), document.fonts.load("400 40px Montserrat")]).catch(() => {})
+    ? Promise.all([document.fonts.load("800 40px Montserrat"), document.fonts.load("500 40px Montserrat")]).catch(() => {})
     : Promise.resolve();
 
   async function loadImage(file) {
@@ -380,23 +380,22 @@
   const toJpeg = (canvas, quality) => new Promise((resolve, reject) =>
     canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("Conversione dell'immagine non riuscita."))), "image/jpeg", quality));
 
-  // Filigrana come il logo: "Dariuss" in grassetto + ".sport", in basso a destra.
+  // Filigrana in basso a destra: logo "D. Sport" e, sotto, l'Instagram "@dariuss.sport".
   function watermark(canvas) {
     const ctx = canvas.getContext("2d");
     const size = Math.round(Math.max(canvas.width, canvas.height) * 0.03);
-    const big = `800 ${size}px Montserrat, Arial, sans-serif`;
-    const small = `400 ${Math.round(size * 0.78)}px Montserrat, Arial, sans-serif`;
-    ctx.font = big; const w1 = ctx.measureText("Dariuss").width;
-    ctx.font = small; const w2 = ctx.measureText(".sport").width;
     const margin = Math.round(size * 0.9);
-    const x = canvas.width - margin - w1 - w2, y = canvas.height - margin;
+    const x = canvas.width - margin, y2 = canvas.height - margin, y1 = y2 - size * 0.62;
     ctx.save();
     ctx.shadowColor = "rgba(0,0,0,0.45)";
     ctx.shadowBlur = size * 0.3;
     ctx.fillStyle = "rgba(255,255,255,0.88)";
+    ctx.textAlign = "right";
     ctx.textBaseline = "alphabetic";
-    ctx.font = big; ctx.fillText("Dariuss", x, y);
-    ctx.font = small; ctx.fillText(".sport", x + w1, y);
+    ctx.font = `800 ${size}px Montserrat, Arial, sans-serif`;
+    ctx.fillText("D. Sport", x, y1);
+    ctx.font = `500 ${Math.round(size * 0.42)}px Montserrat, Arial, sans-serif`;
+    ctx.fillText("@dariuss.sport", x, y2);
     ctx.restore();
   }
 

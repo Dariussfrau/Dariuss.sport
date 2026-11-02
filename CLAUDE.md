@@ -1,6 +1,6 @@
-# Dariuss.sport · istruzioni per Claude
+# D. Sport · istruzioni per Claude
 
-Sito/blog di fotografia sportiva (calcio dilettantistico, Sud Sardegna) del proprietario di @dariuss.sport.
+Sito/blog di fotografia sportiva **D. Sport** (calcio dilettantistico, Sud Sardegna) del proprietario di @dariuss.sport su Instagram.
 Il proprietario non è uno sviluppatore: parla italiano, spiega le modifiche in italiano semplice, e prima di toccare la grafica proponi e chiedi.
 
 ## Architettura
@@ -23,9 +23,11 @@ Il proprietario non è uno sviluppatore: parla italiano, spiega le modifiche in 
 
 ## Brand (proposta A "Campo chiaro", approvata)
 
-- Colori: crema `#F2EEE6` (sfondo), verde `#43703F` (accento, logo "Dariuss"), verde scuro `#1E3A1E` (titoli, footer), salvia `#7A8A78` (testo secondario), menta `#A9C79A` (logo su fondo scuro).
-- Caratteri: **Montserrat** (titoli, logo: "Dariuss" 800 + ".sport" 400), **Poppins** (testo), **Newsreader** (testi lunghi, articoli).
-- Filigrana: "Dariuss" Montserrat 800 + ".sport" 400, bianco 88%, ombra leggera, in basso a destra, altezza ≈3% del lato lungo.
+- Colori: crema `#F2EEE6` (sfondo), verde `#43703F` (accento, "D." del logo), verde scuro `#1E3A1E` (titoli, footer), salvia `#7A8A78` (testo secondario), menta `#A9C79A` (logo su fondo scuro).
+- Logo del sito: **"D. Sport"**, Montserrat 800, "D." verde `#43703F` + "Sport" verde scuro `#1E3A1E` (su fondo scuro: menta + crema). Sotto, quando serve, "FOTOGRAFIA SPORTIVA" spaziato in salvia.
+- **@dariuss.sport** è il nome Instagram: compare nel menu in alto a destra, nel footer e nella filigrana, sempre come collegamento alla pagina Instagram.
+- Caratteri: **Montserrat** (titoli, logo), **Poppins** (testo), **Newsreader** (testi lunghi, articoli).
+- Filigrana: "D. Sport" Montserrat 800 e sotto "@dariuss.sport" Montserrat 500, bianco 88%, ombra leggera, allineata a destra in basso, altezza ≈3% del lato lungo.
 - Il proprietario ha chiesto di non cambiare colori, dimensioni dei titoli e ordine delle sezioni senza sua richiesta.
 
 ## Provare in locale

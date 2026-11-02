@@ -1,4 +1,4 @@
-# Mettere online Dariuss.sport
+# Mettere online il sito D. Sport
 
 Guida passo passo per pubblicare il sito su Cloudflare. Serve farla **una volta sola**: dopo, ogni modifica salvata su GitHub va online da sola.
 

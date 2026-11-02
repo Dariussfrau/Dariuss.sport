@@ -10,7 +10,7 @@ export async function onRequestGet({ env, request }) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
-<title>Gestione · Dariuss.sport</title>
+<title>Gestione · D. Sport</title>
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,7 +19,7 @@ export async function onRequestGet({ env, request }) {
 </head>
 <body>
 <header class="bar"><div class="wrap bar-in">
-  <a class="logo" href="#"><span class="d">Dariuss</span><span class="s">.sport</span><span class="tag">Gestione</span></a>
+  <a class="logo" href="#"><span class="d">D.</span><span class="s">Sport</span><span class="tag">Gestione</span></a>
   <nav><a href="/" target="_blank" rel="noopener">Vedi il sito ↗</a><a href="/esci">Esci</a></nav>
 </div></header>
 <main class="wrap" id="app" aria-live="polite"><p class="muted">Caricamento…</p></main>
