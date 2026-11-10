@@ -67,6 +67,45 @@ p{margin:0}
 .feature .cap{display:flex;justify-content:space-between;gap:12px;margin-top:12px;font-size:13px;color:var(--sage)}
 .feature .cap b{font:700 15px/1.3 var(--display);color:var(--forest)}
 
+/* Foto in evidenza che scorrono in dissolvenza */
+[data-slides] .cover{position:relative}
+.slide{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease;pointer-events:none}
+.slide.on{opacity:1;pointer-events:auto}
+.dots{display:flex;gap:6px;align-items:center}
+.dots i{width:6px;height:6px;border-radius:50%;background:rgba(30,58,30,.22);transition:background .4s,width .4s}
+.dots i.on{background:var(--green);width:18px;border-radius:99px}
+
+/* Villaperuccio: riquadri partita. Giallo e rosso (colori di maglia) solo come accento. */
+:root{--team-y:#F4C430;--team-r:#C8102E}
+.matchband{border-top:1px solid var(--line);padding-block:32px}
+.matchband-in{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:stretch}
+.mteam{display:flex;align-items:center;gap:14px;text-decoration:none;padding-right:12px}
+.mteam > span{display:grid;gap:5px}
+.mteam b{font:800 22px/1.1 var(--display);color:var(--forest)}
+.mteam .eyebrow{letter-spacing:.22em;font-size:11px}
+.jersey{flex:none;display:block}
+.mcard{position:relative;background:rgba(255,255,255,.5);border:1px solid var(--line);border-radius:10px;padding:18px 20px 18px 24px;display:grid;gap:8px;align-content:start;overflow:hidden;min-width:0}
+.mcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:linear-gradient(var(--team-y) 0 50%,var(--team-r) 50% 100%)}
+.mlabel{font:600 11px/1.3 var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--sage)}
+.mteams{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;font:700 19px/1.25 var(--display);color:var(--forest)}
+.mteams .score{font-weight:800;color:var(--green);font-variant-numeric:tabular-nums;white-space:nowrap}
+.mteams .vs{color:var(--sage);font-weight:500}
+.mmeta{font-size:13px;color:var(--muted)}
+.mlink{font:600 13px/1 var(--display);color:var(--green);text-decoration:none}
+a.mlink:hover,.mteam:hover .mlink{text-decoration:underline}
+.team-head{display:flex;align-items:center;gap:24px;padding-top:36px}
+.team-head .d-head{padding-block:0}
+.team-head .d-head h1{margin-top:10px}
+.team-stripe{height:6px;border-radius:99px;margin-block:28px;background:linear-gradient(90deg,var(--team-y) 0 50%,var(--team-r) 50% 100%)}
+.mcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-bottom:44px}
+.mlist{list-style:none;margin:0;padding:0}
+.mrow{display:grid;grid-template-columns:140px minmax(0,1fr) auto;gap:8px 24px;align-items:center;padding-block:18px;border-bottom:1px solid var(--line)}
+.mrow:first-child{border-top:1px solid var(--line)}
+.mrow time{font-size:13px;color:var(--sage)}
+.mside{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.outcome{font:600 12px/1 var(--display);color:var(--sage)}
+.outcome.o-v{color:var(--green)} .outcome.o-s{color:var(--danger)}
+
 section.block{padding-block:56px;border-top:1px solid var(--line)}
 .sec-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:28px;flex-wrap:wrap}
 .sec-head h2{font:800 30px/1.1 var(--display);color:var(--forest);letter-spacing:-.015em}
@@ -182,11 +221,16 @@ section.block{padding-block:56px;border-top:1px solid var(--line)}
 
 @media (max-width:760px){.mini-logo{display:none}}
 @media (max-width:860px){
+  .matchband-in{grid-template-columns:1fr}
   .hero,.about{grid-template-columns:1fr;gap:32px}
   .hero{padding-block:40px 48px}
 }
 @media (max-width:560px){
   .row{grid-template-columns:minmax(0,1fr);gap:6px}
+  .mrow{grid-template-columns:minmax(0,1fr)}
+  .mside{justify-content:flex-start}
+  .team-head{gap:16px;padding-top:24px}
+  .team-head .jersey{width:68px;height:68px}
   .brand-in{padding-block:14px 22px}
   .ig-corner{position:static;order:-1;font-size:12px;padding:0 0 12px}
   .menu-in{padding-block:10px}

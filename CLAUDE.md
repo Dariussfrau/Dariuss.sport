@@ -6,7 +6,7 @@ Il proprietario non è uno sviluppatore: parla italiano, spiega le modifiche in 
 ## Architettura
 
 - **Cloudflare Pages** con **Pages Functions** (`functions/`), nessun passo di build, nessun framework, nessun `package.json`.
-- **D1** (binding `DB`): tabelle `albums`, `photos`, `articles`. Lo schema si crea da solo in `src/db.js` (`CREATE TABLE IF NOT EXISTS`). Per aggiungere colonne usa `ALTER TABLE` idempotente nello stesso punto, mai migrazioni manuali.
+- **D1** (binding `DB`): tabelle `albums`, `photos` (con `featured` = foto che scorrono in home), `articles`, `matches` (partite del Villaperuccio). Le colonne nuove vanno nell'elenco `MIGRATIONS` di `src/db.js`. Lo schema si crea da solo in `src/db.js` (`CREATE TABLE IF NOT EXISTS`). Per aggiungere colonne usa `ALTER TABLE` idempotente nello stesso punto, mai migrazioni manuali.
 - **R2** (binding `BUCKET`):
   - `photos/{albumId}/{uuid}/thumb.jpg` (640 px), `display.jpg` (1600 px, senza filigrana, mostrata sul sito), `hd.jpg` (2048 px, download gratuito)
   - `originals/{albumId}/{uuid}`: originale privato, per la futura vendita in massima qualità. **Mai** servirlo pubblicamente.
@@ -29,6 +29,8 @@ Il proprietario non è uno sviluppatore: parla italiano, spiega le modifiche in 
 - Animazioni approvate: intestazione che resta fissa scorrendo e **dissolvenza** di foto e album (classe `.reveal`) quando entrano nello schermo. Rispettano `prefers-reduced-motion`.
 - Dopo ogni modifica a `site.css` o `site.js` aumenta `ASSET_VERSION` in `src/templates.js`, altrimenti i browser possono mostrare la versione vecchia.
 - **@dariuss.sport** è il nome Instagram: compare nell'angolo in alto a destra (su telefono sopra il logo) e nel footer, sempre come collegamento alla pagina Instagram.
+- **Villaperuccio** (squadra seguita, `SITE.team`): pagina `/villaperuccio`, riquadri "Prossima partita" e "Ultimo risultato" in home sotto il titolo, tutto in `src/matches.js`. Giallo `#F4C430` e rosso `#C8102E` (colori di maglia) si usano **solo** come accento negli elementi della squadra, mai nel resto del sito. La maglia disegnata (`jersey()`) è provvisoria: va rifatta sulla foto della maglia vera quando il proprietario la manda.
+- Home: accanto al titolo scorrono in dissolvenza le foto segnate "In home" dal pannello (massimo 6); se non ce ne sono resta la copertina dell'ultimo album.
 - Caratteri: **Montserrat** (titoli, logo), **Poppins** (testo), **Newsreader** (testi lunghi, articoli).
 - **Nessuna filigrana** sulle foto: il proprietario l'ha tolta. Non reintrodurla senza sua richiesta.
 - Il proprietario ha chiesto di non cambiare colori, dimensioni dei titoli e ordine delle sezioni senza sua richiesta.
@@ -45,5 +47,7 @@ Poi apri http://localhost:8788 e http://localhost:8788/gestione. Prima di conseg
 
 ## Idee già concordate per il futuro
 
+- **Tappa 2** (approvata): pagina "Richiedi un servizio" con prezzi "su richiesta" e solo modulo di ricontatto (nome, email o telefono, messaggio) che arriva per email al proprietario e nel pannello; voce di menu "Contatti"; pulsanti Condividi su WhatsApp/Instagram; SEO (sitemap, anteprime, descrizioni).
+- **Tappa 3** (approvata): "Foto della settimana" con voto e mini-gioco dei rigori in una pagina a parte, raggiungibile dalla pagina del Villaperuccio.
 - Download in **massima qualità a pagamento** (pulsante già presente e disattivato nella foto ingrandita; gli originali sono già salvati in `originals/`).
 - Dominio personalizzato (da collegare in Cloudflare Pages → Custom domains).

@@ -8,9 +8,9 @@ export const logo = (tag = "a", attrs = 'href="/"') =>
   `<${tag} class="logo" ${attrs} aria-label="${SITE.name}, home"><span class="d">D.</span><span class="s">Sport</span></${tag}>`;
 
 // Da aumentare a ogni modifica di site.css / site.js: obbliga i browser a scaricare la versione nuova.
-const ASSET_VERSION = "4";
+const ASSET_VERSION = "5";
 
-const MENU = [["home", "/", "Home"], ["album", "/album", "Album"], ["articoli", "/articoli", "Articoli"], ["chi-sono", "/#chi-sono", "Chi sono"]];
+const MENU = [["home", "/", "Home"], ["album", "/album", "Album"], ["articoli", "/articoli", "Articoli"], ["villaperuccio", "/villaperuccio", "Villaperuccio"], ["chi-sono", "/#chi-sono", "Chi sono"]];
 
 // Logo grande al centro; sotto, separato da una linea, il menu centrato che resta fisso in alto scorrendo.
 function header(active) {

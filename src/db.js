@@ -35,6 +35,24 @@ const SCHEMA = [
     published INTEGER NOT NULL DEFAULT 1,
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
   )`,
+  `CREATE TABLE IF NOT EXISTS matches (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    date TEXT NOT NULL,
+    time TEXT NOT NULL DEFAULT '',
+    opponent TEXT NOT NULL,
+    home INTEGER NOT NULL DEFAULT 1,
+    place TEXT NOT NULL DEFAULT '',
+    competition TEXT NOT NULL DEFAULT '',
+    score_us INTEGER,
+    score_them INTEGER,
+    album_id INTEGER,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  )`,
+];
+
+// Colonne aggiunte dopo la prima pubblicazione: se esistono già, l'errore viene ignorato.
+const MIGRATIONS = [
+  `ALTER TABLE photos ADD COLUMN featured INTEGER NOT NULL DEFAULT 0`,
 ];
 
 export class SetupError extends Error {}
@@ -45,6 +63,10 @@ export async function getDb(env) {
   if (!env.DB) throw new SetupError("Manca il collegamento al database (binding D1 «DB»).");
   if (!schemaReady) {
     await env.DB.batch(SCHEMA.map((sql) => env.DB.prepare(sql)));
+    for (const sql of MIGRATIONS) {
+      try { await env.DB.prepare(sql).run(); }
+      catch (err) { if (!/duplicate column/i.test(String(err && err.message))) throw err; }
+    }
     schemaReady = true;
   }
   return env.DB;

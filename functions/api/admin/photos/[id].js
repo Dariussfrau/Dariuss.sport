@@ -1,6 +1,16 @@
 import { getBucket, getDb } from "../../../../src/db.js";
 import { json } from "../../../../src/util.js";
 
+// Mette o toglie la foto dalle "foto in evidenza" che scorrono in home.
+export async function onRequestPut({ env, params, request }) {
+  const DB = await getDb(env);
+  const id = Number(params.id);
+  const { featured } = await request.json().catch(() => ({}));
+  const res = await DB.prepare(`UPDATE photos SET featured = ? WHERE id = ?`).bind(featured ? 1 : 0, id).run();
+  if (!res.meta.changes) return json({ error: "Foto non trovata." }, 404);
+  return json({ ok: true, featured: featured ? 1 : 0 });
+}
+
 export async function onRequestDelete({ env, params }) {
   const DB = await getDb(env);
   const id = Number(params.id);

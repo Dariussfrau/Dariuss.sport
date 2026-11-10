@@ -17,6 +17,24 @@ document.addEventListener("touchstart", () => {}, { passive: true });
     measure();
   }
 
+  // Foto in evidenza in home: cambiano ogni 5 secondi in dissolvenza.
+  const show = document.querySelector("[data-slides]");
+  const slides = show ? [...show.querySelectorAll(".slide")] : [];
+  if (slides.length > 1 && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const dots = [...show.querySelectorAll(".dots i")];
+    const title = show.querySelector("[data-cap-title]"), sub = show.querySelector("[data-cap-sub]");
+    let cur = 0;
+    setInterval(() => {
+      if (document.hidden) return;
+      const nxt = (cur + 1) % slides.length;
+      slides[cur].classList.remove("on"); slides[cur].tabIndex = -1; dots[cur]?.classList.remove("on");
+      slides[nxt].classList.add("on"); slides[nxt].tabIndex = 0; dots[nxt]?.classList.add("on");
+      title.textContent = slides[nxt].dataset.title;
+      sub.textContent = slides[nxt].dataset.sub;
+      cur = nxt;
+    }, 5000);
+  }
+
   // Foto e album emergono con una dissolvenza quando entrano nello schermo.
   const items = document.querySelectorAll(".reveal");
   if (!("IntersectionObserver" in window)) { items.forEach((el) => el.classList.add("in")); return; }

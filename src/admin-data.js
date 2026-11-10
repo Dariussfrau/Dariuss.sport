@@ -48,6 +48,29 @@ export function readArticleFields(input, { partial = false } = {}) {
   return { values };
 }
 
+// Valida i campi di una partita. Il risultato è facoltativo: vuoto significa "da giocare".
+export function readMatchFields(input) {
+  const values = {};
+  values.opponent = str(input.opponent, 80);
+  if (!values.opponent) return { error: "Scrivi il nome dell'avversario." };
+  values.date = str(input.date, 10);
+  if (!isIsoDate(values.date)) return { error: "La data non è valida." };
+  values.time = str(input.time, 5);
+  if (values.time && !/^\d{2}:\d{2}$/.test(values.time)) return { error: "L'orario non è valido." };
+  values.home = input.home === false || input.home === 0 ? 0 : 1;
+  values.place = str(input.place, 120);
+  values.competition = str(input.competition, 60);
+  const score = (v) => (v === "" || v == null ? null : Number(v));
+  values.score_us = score(input.score_us);
+  values.score_them = score(input.score_them);
+  if ((values.score_us == null) !== (values.score_them == null)) return { error: "Inserisci entrambi i punteggi, oppure lasciali vuoti." };
+  for (const n of [values.score_us, values.score_them]) {
+    if (n != null && (!Number.isInteger(n) || n < 0 || n > 99)) return { error: "Il punteggio non è valido." };
+  }
+  values.album_id = input.album_id ? Number(input.album_id) : null;
+  return { values };
+}
+
 export async function slugFor(DB, table, title, date, exceptId = null) {
   return uniqueSlug(DB, table, slugify(table === "albums" ? `${title} ${date}` : title), exceptId);
 }

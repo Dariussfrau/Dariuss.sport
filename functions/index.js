@@ -1,23 +1,48 @@
 import { SITE } from "../src/config.js";
 import { ALBUM_SELECT, getDb } from "../src/db.js";
+import { jersey, loadMatches, matchCard, pickMatches } from "../src/matches.js";
 import { albumCard, articleRow, logo, page, withErrors } from "../src/templates.js";
 import { esc, formatDate, html, photoUrl } from "../src/util.js";
 
 export const onRequestGet = withErrors(async ({ env, request }) => {
   const DB = await getDb(env);
-  const [albums, articles] = await Promise.all([
+  const [albums, articles, featured, matches] = await Promise.all([
     DB.prepare(`${ALBUM_SELECT} WHERE a.published = 1 ORDER BY a.date DESC, a.id DESC LIMIT 9`).all(),
     DB.prepare(`SELECT * FROM articles WHERE published = 1 ORDER BY date DESC, id DESC LIMIT 5`).all(),
+    // Foto scelte dal pannello ("In home"): scorrono in dissolvenza accanto al titolo.
+    DB.prepare(`SELECT p.key, a.slug, a.title, a.competition, a.date FROM photos p JOIN albums a ON a.id = p.album_id
+                WHERE p.featured = 1 AND a.published = 1 ORDER BY a.date DESC, p.position, p.id LIMIT 6`).all(),
+    loadMatches(DB),
   ]);
+  const { next, last } = pickMatches(matches);
   const latest = albums.results[0];
   const origin = new URL(request.url).origin;
 
-  const feature = latest
-    ? `<a class="feature reveal" href="/album/${esc(latest.slug)}">
-        <div class="cover tall">${latest.cover_key ? `<img src="${photoUrl(latest.cover_key)}" alt="" width="1280" height="1600">` : `<div class="empty-cover">${logo("span", "")}</div>`}</div>
-        <div class="cap"><span><b>${esc(latest.title)}</b><br>${[esc(latest.competition), formatDate(latest.date)].filter(Boolean).join(" · ")}</span><span>${latest.photo_count} foto →</span></div>
-      </a>`
-    : `<div class="feature"><div class="cover tall"><div class="empty-cover">${logo("span", "")}</div></div><div class="cap"><span>Il primo album arriva presto.</span></div></div>`;
+  const emptyCover = `<div class="empty-cover">${logo("span", "")}</div>`;
+  const capSub = (a) => [esc(a.competition), formatDate(a.date)].filter(Boolean).join(" · ");
+  const slides = featured.results;
+  let feature;
+  if (slides.length) {
+    feature = `<div class="feature reveal" data-slides>
+        <div class="cover tall">${slides.map((p, i) => `<a class="slide${i ? "" : " on"}" href="/album/${esc(p.slug)}" data-title="${esc(p.title)}" data-sub="${capSub(p)}"${i ? ' tabindex="-1"' : ""}><img src="${photoUrl(p.key)}" alt="${esc(p.title)}"${i ? ' loading="lazy"' : ""}></a>`).join("")}</div>
+        <div class="cap"><span><b data-cap-title>${esc(slides[0].title)}</b><br><span data-cap-sub>${capSub(slides[0])}</span></span>${slides.length > 1 ? `<span class="dots" aria-hidden="true">${slides.map((_, i) => `<i${i ? "" : ' class="on"'}></i>`).join("")}</span>` : ""}</div>
+      </div>`;
+  } else if (latest) {
+    feature = `<a class="feature reveal" href="/album/${esc(latest.slug)}">
+        <div class="cover tall">${latest.cover_key ? `<img src="${photoUrl(latest.cover_key)}" alt="" width="1280" height="1600">` : emptyCover}</div>
+        <div class="cap"><span><b>${esc(latest.title)}</b><br>${capSub(latest)}</span><span>${latest.photo_count} foto →</span></div>
+      </a>`;
+  } else {
+    feature = `<div class="feature"><div class="cover tall">${emptyCover}</div><div class="cap"><span>Il primo album arriva presto.</span></div></div>`;
+  }
+
+  const matchBand = next || last
+    ? `<section class="matchband"><div class="wrap matchband-in">
+    <a class="mteam" href="/villaperuccio">${jersey(64)}<span><span class="eyebrow">Seguo il</span><b>${esc(SITE.team.name)}</b><span class="mlink">La stagione →</span></span></a>
+    ${next ? matchCard(next, "Prossima partita") : ""}
+    ${last ? matchCard(last, "Ultimo risultato") : ""}
+  </div></section>`
+    : "";
 
   const body = `<main>
   <div class="wrap hero">
@@ -28,6 +53,8 @@ export const onRequestGet = withErrors(async ({ env, request }) => {
     </div>
     ${feature}
   </div>
+
+  ${matchBand}
 
   <section class="block" id="album"><div class="wrap">
     <div class="sec-head"><h2>Album</h2><a href="/album">Tutti gli album →</a></div>
@@ -57,7 +84,7 @@ export const onRequestGet = withErrors(async ({ env, request }) => {
     active: "home",
     title: "",
     url: origin + "/",
-    image: latest?.cover_key ? origin + photoUrl(latest.cover_key) : "",
+    image: slides[0] ? origin + photoUrl(slides[0].key) : latest?.cover_key ? origin + photoUrl(latest.cover_key) : "",
     body,
   }));
 });

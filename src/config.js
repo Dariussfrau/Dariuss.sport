@@ -6,6 +6,8 @@ export const SITE = {
   instagram: "https://www.instagram.com/dariuss.sport/",
   handle: "@dariuss.sport",
   bio: "Sono Dario e racconto il calcio dilettantistico con la fotografia. Mi interessano i volti, i contrasti e i momenti che durano un attimo: quelli che dalla tribuna non si vedono.",
+  // Squadra seguita: nome e colori di maglia (giallo e rosso).
+  team: { name: "Villaperuccio", yellow: "#F4C430", red: "#C8102E" },
   kit: [
     ["Corpo", ["Sony A7 V"]],
     ["Obiettivi", ["Sony FE 70-200 mm F2.8 GM OSS II", "Sony FE 100-400 mm F4.5-5.6 GM OSS"]],

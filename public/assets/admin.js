@@ -58,7 +58,7 @@
   async function dashboard() {
     app.innerHTML = loading;
     try {
-      const [{ albums }, { articles }] = await Promise.all([api("GET", "/api/admin/albums"), api("GET", "/api/admin/articles")]);
+      const [{ albums }, { articles }, { matches }] = await Promise.all([api("GET", "/api/admin/albums"), api("GET", "/api/admin/articles"), api("GET", "/api/admin/matches")]);
       app.innerHTML = `
       <section class="panel">
         <div class="panel-head"><h1>Album</h1><a class="btn solid" href="#album-nuovo">+ Nuovo album</a></div>
@@ -67,6 +67,13 @@
             <span class="txt"><b>${esc(a.title)}</b><small>${[fmtDate(a.date), `${a.photo_count} foto`, a.has_password ? "con password" : ""].filter(Boolean).join(" · ")}</small></span>
             ${a.published ? "" : `<span class="badge">Bozza</span>`}</a></li>`).join("")}</ul>`
           : `<p class="muted">Nessun album. Crea il primo con «Nuovo album».</p>`}
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h1>Partite del Villaperuccio</h1><a class="btn solid" href="#partita-nuova">+ Nuova partita</a></div>
+        ${matches.length ? `<ul class="items">${matches.map((m) => `<li><a href="#partita-${m.id}">
+            <span class="txt"><b>${esc(m.home ? `Villaperuccio – ${m.opponent}` : `${m.opponent} – Villaperuccio`)}</b><small>${[fmtDate(m.date), m.time, m.competition].filter(Boolean).join(" · ")}</small></span>
+            <span class="badge${m.score_us == null ? "" : " done"}">${m.score_us == null ? "Da giocare" : (m.home ? `${m.score_us} – ${m.score_them}` : `${m.score_them} – ${m.score_us}`)}</span></a></li>`).join("")}</ul>`
+          : `<p class="muted">Nessuna partita. Aggiungi la prossima con «Nuova partita»: comparirà in home e nella pagina della squadra.</p>`}
       </section>
       <section class="panel">
         <div class="panel-head"><h1>Articoli</h1><a class="btn solid" href="#articolo-nuovo">+ Nuovo articolo</a></div>
@@ -177,10 +184,20 @@
       grid.innerHTML = photos.map((p) => `<div class="ptile">
         <img src="${thumbUrl(p.key)}" alt="" loading="lazy">
         ${p.id === coverId() ? `<span class="badge cover">Copertina</span>` : ""}
+        <button type="button" class="feat${p.featured ? " on" : ""}" data-feat="${p.id}" aria-pressed="${p.featured ? "true" : "false"}" title="Mostra questa foto tra quelle che scorrono in home">${p.featured ? "★ In home" : "☆ Home"}</button>
         <div class="pacts">
           ${p.id === coverId() ? "" : `<button type="button" data-cover="${p.id}">Copertina</button>`}
           <button type="button" data-del="${p.id}">Elimina</button>
         </div></div>`).join("");
+      grid.querySelectorAll("[data-feat]").forEach((b) => b.addEventListener("click", async () => {
+        const photo = photos.find((p) => p.id === Number(b.dataset.feat));
+        try {
+          await api("PUT", `/api/admin/photos/${photo.id}`, { featured: !photo.featured });
+          photo.featured = photo.featured ? 0 : 1;
+          renderGrid();
+          toast(photo.featured ? "Foto aggiunta alla home." : "Foto tolta dalla home.");
+        } catch (e) { toast(e.message, true); }
+      }));
       grid.querySelectorAll("[data-cover]").forEach((b) => b.addEventListener("click", async () => {
         try {
           await api("PUT", `/api/admin/albums/${id}`, { cover_photo_id: Number(b.dataset.cover) });
@@ -248,6 +265,80 @@
     confirmButton(document.getElementById("del-album"), "Conferma: elimina tutto", async () => {
       await api("DELETE", `/api/admin/albums/${id}`);
       toast("Album eliminato.");
+      location.hash = "";
+    });
+  }
+
+  /* ================= Partite ================= */
+  async function matchEditor(id) {
+    let m = { opponent: "", date: today(), time: "", home: 1, place: "", competition: "", score_us: null, score_them: null, album_id: null };
+    let albums = [];
+    app.innerHTML = loading;
+    try {
+      ({ albums } = await api("GET", "/api/admin/albums"));
+      if (id) ({ match: m } = await api("GET", `/api/admin/matches/${id}`));
+    } catch (e) { app.innerHTML = errorBox(e.message); return; }
+    const val = (v) => (v == null ? "" : esc(v));
+
+    app.innerHTML = `
+    <a class="back" href="#">← Torna all'elenco</a>
+    <div class="panel-head"><h1>${id ? `Villaperuccio e ${esc(m.opponent)}` : "Nuova partita"}</h1></div>
+    <form id="match-form" class="panel form" novalidate>
+      <div class="field"><label for="m-opponent">Avversario</label><input id="m-opponent" maxlength="80" required value="${val(m.opponent)}" placeholder="Nuxis"></div>
+      <fieldset class="field"><legend>Dove si gioca</legend>
+        <label class="check"><input type="radio" name="m-home" value="1" ${m.home ? "checked" : ""}> In casa</label>
+        <label class="check"><input type="radio" name="m-home" value="0" ${m.home ? "" : "checked"}> In trasferta</label>
+      </fieldset>
+      <div class="cols">
+        <div class="field"><label for="m-date">Data</label><input id="m-date" type="date" required value="${val(m.date)}"></div>
+        <div class="field"><label for="m-time">Ora (facoltativa)</label><input id="m-time" type="time" value="${val(m.time)}"></div>
+      </div>
+      <div class="field"><label for="m-place">Campo</label><input id="m-place" maxlength="120" value="${val(m.place)}" placeholder="Campo Comunale di Villaperuccio"></div>
+      <div class="field"><label for="m-competition">Tipo</label>
+        <input id="m-competition" list="competitions" maxlength="60" value="${val(m.competition)}" placeholder="Campionato">
+        <datalist id="competitions">${COMPETITIONS.map((c) => `<option value="${esc(c)}">`).join("")}</datalist></div>
+      <fieldset class="field"><legend>Risultato</legend>
+        <p class="muted small">Lascia vuoto finché la partita non è stata giocata: comparirà come «Prossima partita».</p>
+        <div class="cols">
+          <div class="field"><label for="m-us">Gol Villaperuccio</label><input id="m-us" type="number" inputmode="numeric" min="0" max="99" value="${val(m.score_us)}"></div>
+          <div class="field"><label for="m-them">Gol avversario</label><input id="m-them" type="number" inputmode="numeric" min="0" max="99" value="${val(m.score_them)}"></div>
+        </div>
+      </fieldset>
+      <div class="field"><label for="m-album">Album collegato</label>
+        <select id="m-album"><option value="">Nessuno</option>${albums.map((a) => `<option value="${a.id}" ${a.id === m.album_id ? "selected" : ""}>${esc(a.title)} · ${fmtDate(a.date)}</option>`).join("")}</select>
+        <p class="muted small">Accanto al risultato comparirà il collegamento «Guarda l'album».</p></div>
+      <p class="err" id="form-err" hidden></p>
+      <div class="acts"><button class="btn solid" type="submit">${id ? "Salva modifiche" : "Aggiungi partita"}</button></div>
+    </form>
+    ${id ? `<section class="panel danger"><h2>Elimina partita</h2><p class="muted small">Non si può annullare. L'album collegato non viene toccato.</p>
+      <button class="btn danger-btn" type="button" id="del-match">Elimina partita</button></section>` : ""}`;
+
+    document.getElementById("match-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const err = document.getElementById("form-err"), btn = e.target.querySelector("[type=submit]");
+      const body = {
+        opponent: document.getElementById("m-opponent").value,
+        home: document.querySelector("[name=m-home]:checked").value === "1",
+        date: document.getElementById("m-date").value,
+        time: document.getElementById("m-time").value,
+        place: document.getElementById("m-place").value,
+        competition: document.getElementById("m-competition").value,
+        score_us: document.getElementById("m-us").value,
+        score_them: document.getElementById("m-them").value,
+        album_id: document.getElementById("m-album").value,
+      };
+      err.hidden = true;
+      btn.disabled = true;
+      try {
+        await api(id ? "PUT" : "POST", id ? `/api/admin/matches/${id}` : "/api/admin/matches", body);
+        toast(id ? "Partita salvata." : "Partita aggiunta.");
+        location.hash = "";
+      } catch (ex) { err.textContent = ex.message; err.hidden = false; btn.disabled = false; }
+    });
+
+    if (id) confirmButton(document.getElementById("del-match"), "Conferma eliminazione", async () => {
+      await api("DELETE", `/api/admin/matches/${id}`);
+      toast("Partita eliminata.");
       location.hash = "";
     });
   }
@@ -464,6 +555,8 @@
     window.scrollTo(0, 0);
     if (h === "album-nuovo") return albumEditor(null);
     if ((m = /^album-(\d+)$/.exec(h))) return albumEditor(Number(m[1]));
+    if (h === "partita-nuova") return matchEditor(null);
+    if ((m = /^partita-(\d+)$/.exec(h))) return matchEditor(Number(m[1]));
     if (h === "articolo-nuovo") return articleEditor(null);
     if ((m = /^articolo-(\d+)$/.exec(h))) return articleEditor(Number(m[1]));
     return dashboard();
