@@ -58,7 +58,7 @@
   async function dashboard() {
     app.innerHTML = loading;
     try {
-      const [{ albums }, { articles }, { matches }] = await Promise.all([api("GET", "/api/admin/albums"), api("GET", "/api/admin/articles"), api("GET", "/api/admin/matches")]);
+      const [{ albums }, { articles }, { matches }, { scores }] = await Promise.all([api("GET", "/api/admin/albums"), api("GET", "/api/admin/articles"), api("GET", "/api/admin/matches"), api("GET", "/api/admin/scores")]);
       app.innerHTML = `
       <section class="panel">
         <div class="panel-head"><h1>Album</h1><a class="btn solid" href="#album-nuovo">+ Nuovo album</a></div>
@@ -82,7 +82,19 @@
             <span class="txt"><b>${esc(a.title)}</b><small>${fmtDate(a.date)}</small></span>
             ${a.published ? "" : `<span class="badge">Bozza</span>`}</a></li>`).join("")}</ul>`
           : `<p class="muted">Nessun articolo. Scrivi il primo con «Nuovo articolo».</p>`}
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h1>Classifica dei rigori</h1><a class="btn" href="/rigori" target="_blank" rel="noopener">Apri il gioco ↗</a></div>
+        <p class="muted small">I nomi li scrivono i visitatori: se ne trovi uno inopportuno, eliminalo da qui.</p>
+        ${scores.length ? `<ul class="items">${scores.map((s) => `<li class="plain"><span class="txt"><b>${esc(s.name)}</b><small>${esc(s.team)} · ${s.score} punti</small></span>
+            <button class="btn danger-btn small-btn" type="button" data-del-score="${s.id}">Elimina</button></li>`).join("")}</ul>`
+          : `<p class="muted">Nessun punteggio salvato per ora.</p>`}
       </section>`;
+      app.querySelectorAll("[data-del-score]").forEach((b) => confirmButton(b, "Conferma", async () => {
+        await api("DELETE", `/api/admin/scores/${b.dataset.delScore}`);
+        toast("Punteggio eliminato.");
+        dashboard();
+      }));
     } catch (e) {
       app.innerHTML = errorBox(e.message);
     }

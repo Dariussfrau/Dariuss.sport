@@ -41,6 +41,7 @@ export async function onRequestDelete({ env, params }) {
   await deletePrefix(bucket, `originals/${id}/`);
   await DB.batch([
     DB.prepare(`DELETE FROM photos WHERE album_id = ?`).bind(id),
+    DB.prepare(`DELETE FROM votes WHERE album_id = ?`).bind(id),
     DB.prepare(`DELETE FROM albums WHERE id = ?`).bind(id),
     DB.prepare(`UPDATE matches SET album_id = NULL WHERE album_id = ?`).bind(id),
   ]);

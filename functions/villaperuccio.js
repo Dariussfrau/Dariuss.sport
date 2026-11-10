@@ -20,6 +20,7 @@ export const onRequestGet = withErrors(async ({ env, request }) => {
   ${next || last ? `<div class="mcards">${next ? matchCard(next, "Prossima partita") : ""}${last ? matchCard(last, "Ultimo risultato") : ""}</div>` : ""}
   <div class="sec-head"><h2>Partite</h2><span>${matches.length ? `${matches.length} in calendario` : ""}</span></div>
   ${matches.length ? `<ul class="mlist">${matches.map(matchRow).join("")}</ul>` : `<p class="empty">Il calendario arriva presto.</p>`}
+  <a class="playcard" href="/rigori"><span><b>Il campionato dei rigori</b>Scegli una squadra del girone e sfida le altre: cinque rigori a turno.</span><span class="btn solid">Gioca</span></a>
 </main>`;
 
   return html(page({

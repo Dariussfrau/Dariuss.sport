@@ -48,6 +48,21 @@ const SCHEMA = [
     album_id INTEGER,
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
   )`,
+  `CREATE TABLE IF NOT EXISTS votes (
+    album_id INTEGER NOT NULL,
+    voter TEXT NOT NULL,
+    photo_id INTEGER NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (album_id, voter)
+  )`,
+  `CREATE TABLE IF NOT EXISTS scores (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    team TEXT NOT NULL,
+    score INTEGER NOT NULL,
+    beaten INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  )`,
 ];
 
 // Colonne aggiunte dopo la prima pubblicazione: se esistono già, l'errore viene ignorato.

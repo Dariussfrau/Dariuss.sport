@@ -1,5 +1,6 @@
 import { ALBUM_SELECT, getDb } from "../../src/db.js";
 import { notFound, page, shareRow, withErrors } from "../../src/templates.js";
+import { votingAlbum } from "../../src/votes.js";
 import { downloadName, esc, exifLine, formatDate, html, photoUrl } from "../../src/util.js";
 
 export const onRequestGet = withErrors(async ({ env, params, request }) => {
@@ -9,6 +10,8 @@ export const onRequestGet = withErrors(async ({ env, params, request }) => {
 
   const { results: photos } = await DB.prepare(`SELECT * FROM photos WHERE album_id = ? ORDER BY position, id`).bind(album.id).all();
   const origin = new URL(request.url).origin;
+  // Sull'ultimo album pubblicato si vota la "Foto della settimana".
+  const voting = photos.length > 0 && (await votingAlbum(DB))?.id === album.id;
 
   const items = photos.map((p, i) => ({
     id: p.id,
@@ -23,7 +26,7 @@ export const onRequestGet = withErrors(async ({ env, params, request }) => {
     <button class="open" type="button" data-photo="${i}" aria-label="Apri foto ${i + 1} di ${items.length}">
       <img src="${p.src}" alt="${esc(album.title)}, foto ${i + 1}" width="${p.w}" height="${p.h}" loading="${i < 6 ? "eager" : "lazy"}">
     </button>
-    <figcaption><span class="exif">${esc(p.exif)}</span><button class="dl" type="button" data-dl="${i}" aria-label="Scarica foto ${i + 1} in HD">Scarica HD</button></figcaption>
+    <figcaption><span class="exif">${esc(p.exif)}</span>${voting ? `<button class="vote" type="button" data-vote="${i}" hidden></button>` : ""}<button class="dl" type="button" data-dl="${i}" aria-label="Scarica foto ${i + 1} in HD">Scarica HD</button></figcaption>
   </figure>`).join("");
 
   const facts = [
@@ -39,7 +42,7 @@ export const onRequestGet = withErrors(async ({ env, params, request }) => {
       ? `<div class="dlbar"><p><b>Scarica le tue foto.</b> Ogni foto si scarica gratis in HD (2048 px).</p></div>`
       : "";
 
-  const data = JSON.stringify({ slug: album.slug, title: album.title, photos: items }).replace(/</g, "\\u003c");
+  const data = JSON.stringify({ slug: album.slug, title: album.title, voting, photos: items }).replace(/</g, "\\u003c");
 
   const body = `<main class="wrap">
   <a class="back" href="/album">← Tutti gli album</a>
@@ -51,6 +54,7 @@ export const onRequestGet = withErrors(async ({ env, params, request }) => {
     ${shareRow(album.title, request.url.split(/[?#]/)[0])}
   </div>
   ${albumDownload}
+  ${voting ? `<p class="votebar"><b>Foto della settimana.</b> Tocca il cuore sotto lo scatto che preferisci: il più votato finisce in evidenza in home. Puoi cambiare voto quando vuoi.</p>` : ""}
   ${photos.length ? `<div class="gallery">${gallery}</div>` : `<p class="empty">Le foto di questo album arrivano a breve.</p>`}
 </main>
 <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Foto ingrandita"></div>

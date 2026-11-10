@@ -6,7 +6,7 @@ Il proprietario non è uno sviluppatore: parla italiano, spiega le modifiche in 
 ## Architettura
 
 - **Cloudflare Pages** con **Pages Functions** (`functions/`), nessun passo di build, nessun framework, nessun `package.json`.
-- **D1** (binding `DB`): tabelle `albums`, `photos` (con `featured` = foto che scorrono in home), `articles`, `matches` (partite del Villaperuccio). Le colonne nuove vanno nell'elenco `MIGRATIONS` di `src/db.js`. Lo schema si crea da solo in `src/db.js` (`CREATE TABLE IF NOT EXISTS`). Per aggiungere colonne usa `ALTER TABLE` idempotente nello stesso punto, mai migrazioni manuali.
+- **D1** (binding `DB`): tabelle `albums`, `photos` (con `featured` = foto che scorrono in home), `articles`, `matches` (partite del Villaperuccio), `votes` (Foto della settimana), `scores` (classifica dei rigori). Le colonne nuove vanno nell'elenco `MIGRATIONS` di `src/db.js`. Lo schema si crea da solo in `src/db.js` (`CREATE TABLE IF NOT EXISTS`). Per aggiungere colonne usa `ALTER TABLE` idempotente nello stesso punto, mai migrazioni manuali.
 - **R2** (binding `BUCKET`):
   - `photos/{albumId}/{uuid}/thumb.jpg` (640 px), `display.jpg` (1600 px, senza filigrana, mostrata sul sito), `hd.jpg` (2048 px, download gratuito)
   - `originals/{albumId}/{uuid}`: originale privato, per la futura vendita in massima qualità. **Mai** servirlo pubblicamente.
@@ -33,7 +33,9 @@ Il proprietario non è uno sviluppatore: parla italiano, spiega le modifiche in 
 - **Contatti** (`/contatti`, "Richiedi un servizio"): servizi in `SITE.services`, tutti "su richiesta", nessun prezzo. **Niente modulo e niente email** (scelta del proprietario): solo il pulsante "Scrivimi su Instagram" (`SITE.instagramDm`) e, quando il proprietario fornisce il numero, "Scrivimi su WhatsApp" (`SITE.whatsapp`).
 - **Condivisione**: `shareRow()` in `src/templates.js` (WhatsApp + menu di sistema/copia link) su album e articoli; nella foto ingrandita "Condividi" manda il link `.../album/slug#foto-N`, che riapre quella foto.
 - **Google**: `functions/sitemap.xml.js`, `functions/robots.txt.js`, canonical, Open Graph con immagine generica `public/assets/og.png`, dati strutturati in home.
-- `LEAGUE` in `src/config.js`: le 15 squadre della Seconda Categoria Girone B (suggerite come avversario nel pannello, serviranno per il gioco).
+- `LEAGUE` e `LEAGUE_COLORS` in `src/config.js`: le 15 squadre della Seconda Categoria Girone B e i loro colori sociali (stimati dagli stemmi, da correggere se sbagliati).
+- **Foto della settimana** (`src/votes.js`, `/api/voti`): si vota con il cuore sulle foto dell'**ultimo album pubblicato**; un voto per visitatore (cookie tecnico anonimo `ds_voter`), modificabile. La più votata compare in home nella fascia "Foto della settimana".
+- **Il campionato dei rigori** (`/rigori`, `public/assets/rigori.js`, `/api/rigori`): gioco su canvas raggiungibile dalla pagina del Villaperuccio, volutamente **non** in menu né in home. Classifica pubblica dei primi dieci; i nomi sono scritti dai visitatori e si eliminano dal pannello. Gli scudetti (`shield()` in `src/league.js`) sono disegnati con i colori sociali: il proprietario li sostituirà con gli stemmi ufficiali quando avrà i file e il consenso delle società.
 - Home: accanto al titolo scorrono in dissolvenza le foto segnate "In home" dal pannello (massimo 6); se non ce ne sono resta la copertina dell'ultimo album.
 - Caratteri: **Montserrat** (titoli, logo), **Poppins** (testo), **Newsreader** (testi lunghi, articoli).
 - **Nessuna filigrana** sulle foto: il proprietario l'ha tolta. Non reintrodurla senza sua richiesta.
@@ -52,6 +54,7 @@ Poi apri http://localhost:8788 e http://localhost:8788/gestione. Prima di conseg
 ## Idee già concordate per il futuro
 
 - Tappe 1 e 2 fatte (Villaperuccio, foto in home, Contatti, condivisione, Google).
-- **Tappa 3** (approvata): "Foto della settimana" con voto e mini-gioco dei rigori in una pagina a parte, raggiungibile dalla pagina del Villaperuccio. Nel gioco il proprietario vuole le squadre di `LEAGUE` con i loro stemmi: gli stemmi appartengono alle società e l'unica fonte ricevuta è uno screenshot a bassa risoluzione, quindi usare scudetti disegnati con i colori sociali finché non arrivano i file ufficiali (e il consenso delle società).
+- Numero WhatsApp nei contatti: per ora il proprietario vuole solo Instagram (`SITE.whatsapp` vuoto).
+- Tappa 3 fatta (Foto della settimana e campionato dei rigori). Da fare quando arrivano i file: stemmi ufficiali delle squadre al posto degli scudetti disegnati.
 - Download in **massima qualità a pagamento** (pulsante già presente e disattivato nella foto ingrandita; gli originali sono già salvati in `originals/`).
 - Dominio personalizzato (da collegare in Cloudflare Pages → Custom domains).

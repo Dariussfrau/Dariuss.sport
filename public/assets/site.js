@@ -89,6 +89,33 @@ document.addEventListener("click", async (e) => {
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   let idx = 0, lastFocus = null, toastTimer;
 
+  /* ---------- Foto della settimana ---------- */
+  let votes = null; // { counts: { idFoto: numero }, mine: idFoto }
+  function paintVotes() {
+    if (!votes) return;
+    document.querySelectorAll("[data-vote]").forEach((b) => {
+      const p = photos[b.dataset.vote], n = votes.counts[p.id] || 0, mine = votes.mine === p.id;
+      b.hidden = false;
+      b.classList.toggle("on", mine);
+      b.textContent = `${mine ? "♥" : "♡"} ${n}`;
+      b.setAttribute("aria-pressed", mine ? "true" : "false");
+      b.setAttribute("aria-label", `${mine ? "Hai votato questa foto" : "Vota questa foto"} (${n} ${n === 1 ? "voto" : "voti"})`);
+    });
+  }
+  async function castVote(i) {
+    try {
+      const res = await fetch("/api/voti", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ photo_id: photos[i].id }) });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Voto non registrato.");
+      votes = data;
+      paintVotes();
+      toast("Voto registrato. Puoi cambiarlo quando vuoi.");
+    } catch (ex) { toast(ex.message); }
+  }
+  if (album.voting) {
+    fetch(`/api/voti?album=${encodeURIComponent(album.slug)}`).then((r) => r.json()).then((d) => { if (d.open) { votes = d; paintVotes(); } }).catch(() => {});
+  }
+
   function toast(msg) {
     toastEl.textContent = msg;
     toastEl.hidden = false;
@@ -115,6 +142,7 @@ document.addEventListener("click", async (e) => {
         <button type="button" data-lb="prev" aria-label="Foto precedente">←</button>
         <button type="button" class="go" data-dl="${idx}">Scarica HD · 2048 px · gratis</button>
         <button type="button" disabled title="Disponibile a breve">Massima qualità · a pagamento (presto)</button>
+        ${album.voting ? `<button type="button" class="vote" data-vote="${idx}" hidden></button>` : ""}
         <button type="button" data-share="${location.pathname}#foto-${idx + 1}" data-title="${esc(album.title)}">Condividi</button>
         <button type="button" data-lb="close">Chiudi</button>
         <button type="button" data-lb="next" aria-label="Foto successiva">→</button>
@@ -123,6 +151,7 @@ document.addEventListener("click", async (e) => {
     lb.hidden = false;
     document.body.style.overflow = "hidden";
     lb.querySelector(".go").focus();
+    paintVotes();
   }
   function closeLb() {
     lb.hidden = true;
@@ -281,6 +310,8 @@ document.addEventListener("click", async (e) => {
       if (t.closest("[data-cancel]") || t === dlg) closeDlg();
       return;
     }
+    const vote = t.closest("[data-vote]");
+    if (vote) return castVote(Number(vote.dataset.vote));
     const dl = t.closest("[data-dl]");
     if (dl) return photoDownload(Number(dl.dataset.dl));
     if (t.closest("[data-album-dl]")) return albumDownload();

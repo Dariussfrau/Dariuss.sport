@@ -24,6 +24,7 @@ export async function onRequestDelete({ env, params }) {
   ]);
   await DB.batch([
     DB.prepare(`DELETE FROM photos WHERE id = ?`).bind(id),
+    DB.prepare(`DELETE FROM votes WHERE photo_id = ?`).bind(id),
     DB.prepare(`UPDATE albums SET cover_photo_id = NULL WHERE cover_photo_id = ?`).bind(id),
   ]);
   return json({ ok: true });

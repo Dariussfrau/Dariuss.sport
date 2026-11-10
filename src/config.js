@@ -37,3 +37,23 @@ export const COMPETITIONS = ["Seconda Categoria", "Amichevole", "Campionato", "C
 
 // Seconda Categoria, Girone B: le squadre del campionato (suggerite come avversario nel pannello).
 export const LEAGUE = ["Villaperuccio", "Decimomannu Calcio", "Carbonia 1939", "Carloforte", "Domusnovas J. S. E.", "P. G. S. Audax", "Atletico Uta", "Sant'Anna Arresi", "Asseminese", "Teulada Calcio", "AC Cortoghiana", "Barbusi", "Bindua", "Ussana Calcio", "Matzaccarese"];
+
+// Colori sociali usati per gli scudetti disegnati nel gioco dei rigori. Sono stime ricavate dagli stemmi:
+// correggili qui se una squadra ha colori diversi.
+export const LEAGUE_COLORS = {
+  "Villaperuccio": ["#E0262B", "#F6CF2A"],
+  "Decimomannu Calcio": ["#1F6B3A", "#FFFFFF"],
+  "Carbonia 1939": ["#1F3FA6", "#FFFFFF"],
+  "Carloforte": ["#C8102E", "#1B2A4A"],
+  "Domusnovas J. S. E.": ["#C8102E", "#1A1A1A"],
+  "P. G. S. Audax": ["#2E8B3D", "#FFFFFF"],
+  "Atletico Uta": ["#2E8B57", "#FFFFFF"],
+  "Sant'Anna Arresi": ["#3FA9E0", "#FFFFFF"],
+  "Asseminese": ["#1F3FA6", "#D8232A"],
+  "Teulada Calcio": ["#1F4FBF", "#FFFFFF"],
+  "AC Cortoghiana": ["#1B2A4A", "#C8102E"],
+  "Barbusi": ["#D8232A", "#F6CF2A"],
+  "Bindua": ["#1F3FA6", "#C8102E"],
+  "Ussana Calcio": ["#C8102E", "#F2B705"],
+  "Matzaccarese": ["#C8102E", "#FFFFFF"],
+};

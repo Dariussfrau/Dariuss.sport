@@ -3,6 +3,7 @@ import { ALBUM_SELECT, getDb } from "../src/db.js";
 import { jersey, loadMatches, matchCard, pickMatches } from "../src/matches.js";
 import { albumCard, articleRow, logo, page, withErrors } from "../src/templates.js";
 import { esc, formatDate, html, photoUrl } from "../src/util.js";
+import { photoOfTheWeek } from "../src/votes.js";
 
 export const onRequestGet = withErrors(async ({ env, request }) => {
   const DB = await getDb(env);
@@ -14,6 +15,7 @@ export const onRequestGet = withErrors(async ({ env, request }) => {
                 WHERE p.featured = 1 AND a.published = 1 ORDER BY a.date DESC, p.position, p.id LIMIT 6`).all(),
     loadMatches(DB),
   ]);
+  const week = await photoOfTheWeek(DB);
   const { next, last } = pickMatches(matches);
   const latest = albums.results[0];
   const origin = new URL(request.url).origin;
@@ -44,6 +46,18 @@ export const onRequestGet = withErrors(async ({ env, request }) => {
   </div></section>`
     : "";
 
+  const weekBand = week
+    ? `<section class="potw"><div class="wrap potw-in reveal">
+    <a class="potw-img" href="/album/${esc(week.album.slug)}${week.votes ? `#foto-${week.number}` : ""}"><img src="${photoUrl(week.photo.key)}" alt="${esc(week.album.title)}, foto ${week.number}" loading="lazy"></a>
+    <div>
+      <div class="eyebrow">Foto della settimana</div>
+      <h2>${esc(week.album.title)}</h2>
+      <p>${week.votes ? `In testa con ${week.votes} ${week.votes === 1 ? "voto" : "voti"}.` : "La votazione è aperta."} Scegli lo scatto che preferisci: il più votato resta qui in evidenza.</p>
+      <div class="btns"><a class="btn solid" href="/album/${esc(week.album.slug)}">Vota la tua preferita</a></div>
+    </div>
+  </div></section>`
+    : "";
+
   const body = `<main>
   <div class="wrap hero">
     <div>
@@ -55,6 +69,8 @@ export const onRequestGet = withErrors(async ({ env, request }) => {
   </div>
 
   ${matchBand}
+
+  ${weekBand}
 
   <section class="block" id="album"><div class="wrap">
     <div class="sec-head"><h2>Album</h2><a href="/album">Tutti gli album →</a></div>
