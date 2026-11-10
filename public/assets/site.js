@@ -2,6 +2,33 @@
 // Su iPhone serve un ascoltatore touch perché i pulsanti del menu si "accendano" alla pressione.
 document.addEventListener("touchstart", () => {}, { passive: true });
 
+function siteToast(msg) {
+  const el = document.getElementById("toast");
+  if (!el) return;
+  el.textContent = msg;
+  el.hidden = false;
+  clearTimeout(siteToast.timer);
+  siteToast.timer = setTimeout(() => (el.hidden = true), 5000);
+}
+
+// Condivisione: dal telefono apre il menu di sistema (Instagram, WhatsApp, Messaggi…), altrimenti copia il link.
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest("[data-share]");
+  if (!btn) return;
+  const url = new URL(btn.dataset.share || location.href, location.href).href;
+  const title = btn.dataset.title || document.title;
+  if (navigator.share) {
+    try { await navigator.share({ title, url }); } catch { /* chiuso senza condividere */ }
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(url);
+    siteToast("Link copiato: incollalo dove vuoi, anche in una storia Instagram.");
+  } catch {
+    siteToast(url);
+  }
+});
+
 // Intestazione e animazioni di comparsa.
 (() => {
   // Il logo grande scorre via e la fascia del menu resta fissa in alto, con un logo piccolo.
@@ -88,6 +115,7 @@ document.addEventListener("touchstart", () => {}, { passive: true });
         <button type="button" data-lb="prev" aria-label="Foto precedente">←</button>
         <button type="button" class="go" data-dl="${idx}">Scarica HD · 2048 px · gratis</button>
         <button type="button" disabled title="Disponibile a breve">Massima qualità · a pagamento (presto)</button>
+        <button type="button" data-share="${location.pathname}#foto-${idx + 1}" data-title="${esc(album.title)}">Condividi</button>
         <button type="button" data-lb="close">Chiudi</button>
         <button type="button" data-lb="next" aria-label="Foto successiva">→</button>
       </div>`;
@@ -265,6 +293,14 @@ document.addEventListener("touchstart", () => {}, { passive: true });
     const open = t.closest("[data-photo]");
     if (open) openLb(Number(open.dataset.photo));
   });
+  // Un link condiviso del tipo .../album/nome#foto-3 apre direttamente quella foto.
+  const openShared = () => {
+    const shared = /^#foto-(\d+)$/.exec(location.hash);
+    if (shared && photos[shared[1] - 1]) openLb(shared[1] - 1);
+  };
+  window.addEventListener("hashchange", openShared);
+  openShared();
+
   document.addEventListener("keydown", (e) => {
     if (!dlg.hidden) { if (e.key === "Escape") closeDlg(); return; }
     if (lb.hidden) return;

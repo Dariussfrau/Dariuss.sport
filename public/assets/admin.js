@@ -284,7 +284,8 @@
     <a class="back" href="#">← Torna all'elenco</a>
     <div class="panel-head"><h1>${id ? `Villaperuccio e ${esc(m.opponent)}` : "Nuova partita"}</h1></div>
     <form id="match-form" class="panel form" novalidate>
-      <div class="field"><label for="m-opponent">Avversario</label><input id="m-opponent" maxlength="80" required value="${val(m.opponent)}" placeholder="Nuxis"></div>
+      <div class="field"><label for="m-opponent">Avversario</label><input id="m-opponent" list="league" maxlength="80" required value="${val(m.opponent)}" placeholder="Scegli o scrivi la squadra">
+        <datalist id="league">${(window.LEAGUE || []).map((t) => `<option value="${esc(t)}">`).join("")}</datalist></div>
       <fieldset class="field"><legend>Dove si gioca</legend>
         <label class="check"><input type="radio" name="m-home" value="1" ${m.home ? "checked" : ""}> In casa</label>
         <label class="check"><input type="radio" name="m-home" value="0" ${m.home ? "" : "checked"}> In trasferta</label>

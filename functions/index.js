@@ -74,7 +74,7 @@ export const onRequestGet = withErrors(async ({ env, request }) => {
     <div>
       <div class="eyebrow">Chi sono</div>
       <p class="bio">${esc(SITE.bio)}</p>
-      <div class="btns"><a class="btn solid" href="${SITE.instagram}" target="_blank" rel="noopener">Seguimi su Instagram</a></div>
+      <div class="btns"><a class="btn solid" href="${SITE.instagram}" target="_blank" rel="noopener">Seguimi su Instagram</a><a class="btn" href="/contatti">Richiedi un servizio</a></div>
     </div>
     <dl class="kit">${SITE.kit.map(([k, items]) => `<div><dt>${esc(k)}</dt><dd>${items.map((i) => `<span>${esc(i)}</span>`).join("")}</dd></div>`).join("")}</dl>
   </div></section>
@@ -82,6 +82,12 @@ export const onRequestGet = withErrors(async ({ env, request }) => {
 
   return html(page({
     active: "home",
+    jsonLd: {
+      "@context": "https://schema.org", "@type": "ProfessionalService",
+      name: SITE.name, description: SITE.description, url: origin + "/",
+      image: origin + "/assets/og.png", sameAs: [SITE.instagram],
+      areaServed: "Sud Sardegna", knowsAbout: ["Fotografia sportiva", "Calcio dilettantistico"],
+    },
     title: "",
     url: origin + "/",
     image: slides[0] ? origin + photoUrl(slides[0].key) : latest?.cover_key ? origin + photoUrl(latest.cover_key) : "",

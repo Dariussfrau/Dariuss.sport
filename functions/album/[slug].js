@@ -1,5 +1,5 @@
 import { ALBUM_SELECT, getDb } from "../../src/db.js";
-import { notFound, page, withErrors } from "../../src/templates.js";
+import { notFound, page, shareRow, withErrors } from "../../src/templates.js";
 import { downloadName, esc, exifLine, formatDate, html, photoUrl } from "../../src/util.js";
 
 export const onRequestGet = withErrors(async ({ env, params, request }) => {
@@ -48,6 +48,7 @@ export const onRequestGet = withErrors(async ({ env, params, request }) => {
     <h1>${esc(album.title)}</h1>
     ${album.intro ? `<p>${esc(album.intro)}</p>` : ""}
     <div class="facts">${facts}</div>
+    ${shareRow(album.title, request.url.split(/[?#]/)[0])}
   </div>
   ${albumDownload}
   ${photos.length ? `<div class="gallery">${gallery}</div>` : `<p class="empty">Le foto di questo album arrivano a breve.</p>`}

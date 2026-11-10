@@ -6,8 +6,20 @@ export const SITE = {
   instagram: "https://www.instagram.com/dariuss.sport/",
   handle: "@dariuss.sport",
   bio: "Sono Dario e racconto il calcio dilettantistico con la fotografia. Mi interessano i volti, i contrasti e i momenti che durano un attimo: quelli che dalla tribuna non si vedono.",
-  // Squadra seguita: nome e colori di maglia (giallo e rosso).
-  team: { name: "Villaperuccio", yellow: "#F4C430", red: "#C8102E" },
+  // Messaggio diretto su Instagram (apre la chat) e, se indicato, WhatsApp.
+  instagramDm: "https://ig.me/m/dariuss.sport",
+  // Numero WhatsApp con prefisso internazionale e senza spazi, es. "393331234567". Vuoto = pulsante nascosto.
+  whatsapp: "",
+  // Squadra seguita. Maglia di casa: rossa con banda gialla centrale.
+  team: { name: "Villaperuccio", yellow: "#F6CF2A", red: "#E0262B" },
+  // Servizi della pagina Contatti: tutti "su richiesta".
+  services: [
+    ["Partite", "Il racconto fotografico completo della gara, da bordo campo: azioni, esultanze, panchina. Album online con download in HD."],
+    ["Shooting per eventi sportivi", "Servizi su misura per tornei, presentazioni, feste di fine stagione, saggi e giornate dedicate."],
+    ["Stampe personalizzate", "Le tue foto stampate nel formato che preferisci: stampe fine art, poster, quadri e ricordi per la squadra."],
+    ["Foto di squadra e ritratti", "La foto ufficiale di inizio stagione e i ritratti dei giocatori, pronti per i social e per la società."],
+    ["Contenuti per i social", "Reel, grafiche match day e risultato finale per le pagine delle società sportive."],
+  ],
   kit: [
     ["Corpo", ["Sony A7 V"]],
     ["Obiettivi", ["Sony FE 70-200 mm F2.8 GM OSS II", "Sony FE 100-400 mm F4.5-5.6 GM OSS"]],
@@ -21,4 +33,7 @@ export const SITE = {
 };
 
 // Categorie proposte nel pannello di gestione (si può scrivere anche altro).
-export const COMPETITIONS = ["Amichevole", "Campionato", "Coppa", "Torneo", "Giovanili", "Allenamento", "Serie", "Ritratti", "Dietro le quinte"];
+export const COMPETITIONS = ["Seconda Categoria", "Amichevole", "Campionato", "Coppa", "Torneo", "Giovanili", "Allenamento", "Serie", "Ritratti", "Dietro le quinte"];
+
+// Seconda Categoria, Girone B: le squadre del campionato (suggerite come avversario nel pannello).
+export const LEAGUE = ["Villaperuccio", "Decimomannu Calcio", "Carbonia 1939", "Carloforte", "Domusnovas J. S. E.", "P. G. S. Audax", "Atletico Uta", "Sant'Anna Arresi", "Asseminese", "Teulada Calcio", "AC Cortoghiana", "Barbusi", "Bindua", "Ussana Calcio", "Matzaccarese"];

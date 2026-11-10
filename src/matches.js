@@ -73,12 +73,16 @@ export function matchRow(m) {
 </li>`;
 }
 
-// Maglia della squadra disegnata con i colori sociali.
+// Maglia di casa della squadra: rossa, banda gialla centrale dai bordi "a pennellata", colletto e bordi manica gialli.
+const JERSEY_BAND = "M28 13.0 L24.6 14.5 L28 16.0 L25.4 17.5 L27.5 19.0 L24.6 20.5 L28 22.0 L24.6 23.5 L28 25.0 L25.4 26.5 L27.5 28.0 L24.6 29.5 L28 31.0 L26.2 32.5 L27.5 34.0 L24.6 35.5 L27.5 37.0 L25.4 38.5 L28 40.0 L26.2 41.5 L28 43.0 L24.6 44.5 L27.5 46.0 L24.6 47.5 L28 49.0 L24.6 50.5 L28 52.0 L26.2 53.5 L28 55.0 L25.4 56.5 L28 58.0 L36 58.0 L38.6 56.5 L36 55.0 L38.6 53.5 L36 52.0 L39.4 50.5 L36.5 49.0 L39.4 47.5 L36.5 46.0 L39.4 44.5 L36.5 43.0 L38.6 41.5 L36.5 40.0 L39.4 38.5 L36.5 37.0 L39.4 35.5 L36.5 34.0 L37.8 32.5 L36.5 31.0 L37.8 29.5 L36 28.0 L37.8 26.5 L36.5 25.0 L37.8 23.5 L36.5 22.0 L38.6 20.5 L36.5 19.0 L39.4 17.5 L36.5 16.0 L38.6 14.5 L36.5 13.0 Z";
 export function jersey(size = 72) {
   const { yellow, red } = SITE.team;
-  return `<svg class="jersey" width="${size}" height="${size}" viewBox="0 0 64 64" role="img" aria-label="Maglia del ${esc(SITE.team.name)}, gialla e rossa">
-  <path d="M22 6 L8 12 L2 26 L12 31 L16 24 V58 H48 V24 L52 31 L62 26 L56 12 L42 6 C40 11 36 13 32 13 C28 13 24 11 22 6 Z" fill="${yellow}" stroke="#1E3A1E" stroke-width="1.5" stroke-linejoin="round"/>
-  <path d="M8 12 L2 26 L12 31 L16 24 L16 15 Z M56 12 L62 26 L52 31 L48 24 L48 15 Z" fill="${red}" stroke="#1E3A1E" stroke-width="1.5" stroke-linejoin="round"/>
-  <path d="M22 6 C24 11 28 13 32 13 C36 13 40 11 42 6" fill="none" stroke="${red}" stroke-width="3.5" stroke-linecap="round"/>
+  const shirt = "M22 6 L8 12 L2 26 L12 31 L16 24 V58 H48 V24 L52 31 L62 26 L56 12 L42 6 C40 11 36 13 32 13 C28 13 24 11 22 6 Z";
+  return `<svg class="jersey" width="${size}" height="${size}" viewBox="0 0 64 64" role="img" aria-label="Maglia del ${esc(SITE.team.name)}, rossa con banda gialla">
+  <path d="${shirt}" fill="${red}"/>
+  <path d="${JERSEY_BAND}" fill="${yellow}"/>
+  <path d="M3.4 23.6 L13.2 28.6 M60.6 23.6 L50.8 28.6" fill="none" stroke="${yellow}" stroke-width="2.4"/>
+  <path d="M22 6 C24 11 28 13 32 13 C36 13 40 11 42 6" fill="none" stroke="${yellow}" stroke-width="3" stroke-linecap="round"/>
+  <path d="${shirt}" fill="none" stroke="#8C1319" stroke-width="1.4" stroke-linejoin="round"/>
 </svg>`;
 }

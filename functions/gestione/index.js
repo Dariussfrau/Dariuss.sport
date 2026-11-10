@@ -1,5 +1,5 @@
 import { isAdmin } from "../../src/auth.js";
-import { COMPETITIONS } from "../../src/config.js";
+import { COMPETITIONS, LEAGUE } from "../../src/config.js";
 
 // Guscio del pannello di gestione: il contenuto lo disegna /assets/admin.js.
 export async function onRequestGet({ env, request }) {
@@ -24,7 +24,7 @@ export async function onRequestGet({ env, request }) {
 </div></header>
 <main class="wrap" id="app" aria-live="polite"><p class="muted">Caricamento…</p></main>
 <div class="toast" id="toast" hidden role="status"></div>
-<script>window.COMPETITIONS = ${JSON.stringify(COMPETITIONS)};</script>
+<script>window.COMPETITIONS = ${JSON.stringify(COMPETITIONS)};window.LEAGUE = ${JSON.stringify(LEAGUE.slice(1))};</script>
 <script src="/assets/admin.js" defer></script>
 </body>
 </html>`, { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" } });

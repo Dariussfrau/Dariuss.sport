@@ -1,6 +1,6 @@
 import { getDb } from "../../src/db.js";
 import { renderMarkdown } from "../../src/markdown.js";
-import { notFound, page, readingTime, withErrors } from "../../src/templates.js";
+import { notFound, page, readingTime, shareRow, withErrors } from "../../src/templates.js";
 import { esc, formatDate, html, photoUrl } from "../../src/util.js";
 
 export const onRequestGet = withErrors(async ({ env, params, request }) => {
@@ -19,11 +19,13 @@ export const onRequestGet = withErrors(async ({ env, params, request }) => {
     </div>
     ${a.cover_key ? `<figure class="cover-fig"><img src="${photoUrl(a.cover_key)}" alt=""></figure>` : ""}
     ${renderMarkdown(a.body)}
+    ${shareRow(a.title, request.url.split(/[?#]/)[0])}
   </article>
 </main>`;
 
   return html(page({
     active: "articoli",
+    type: "article",
     title: a.title,
     description: a.excerpt || "",
     url: request.url,

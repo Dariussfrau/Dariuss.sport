@@ -29,7 +29,11 @@ Il proprietario non è uno sviluppatore: parla italiano, spiega le modifiche in 
 - Animazioni approvate: intestazione che resta fissa scorrendo e **dissolvenza** di foto e album (classe `.reveal`) quando entrano nello schermo. Rispettano `prefers-reduced-motion`.
 - Dopo ogni modifica a `site.css` o `site.js` aumenta `ASSET_VERSION` in `src/templates.js`, altrimenti i browser possono mostrare la versione vecchia.
 - **@dariuss.sport** è il nome Instagram: compare nell'angolo in alto a destra (su telefono sopra il logo) e nel footer, sempre come collegamento alla pagina Instagram.
-- **Villaperuccio** (squadra seguita, `SITE.team`): pagina `/villaperuccio`, riquadri "Prossima partita" e "Ultimo risultato" in home sotto il titolo, tutto in `src/matches.js`. Giallo `#F4C430` e rosso `#C8102E` (colori di maglia) si usano **solo** come accento negli elementi della squadra, mai nel resto del sito. La maglia disegnata (`jersey()`) è provvisoria: va rifatta sulla foto della maglia vera quando il proprietario la manda.
+- **Villaperuccio** (squadra seguita, `SITE.team`): pagina `/villaperuccio`, riquadri "Prossima partita" e "Ultimo risultato" in home sotto il titolo, tutto in `src/matches.js`. Rosso `#E0262B` e giallo `#F6CF2A` (colori di maglia) si usano **solo** come accento negli elementi della squadra, mai nel resto del sito. La maglia disegnata (`jersey()`) riproduce quella di casa vista nelle foto del proprietario: rossa, banda gialla centrale dai bordi "a pennellata", colletto e bordi manica gialli.
+- **Contatti** (`/contatti`, "Richiedi un servizio"): servizi in `SITE.services`, tutti "su richiesta", nessun prezzo. **Niente modulo e niente email** (scelta del proprietario): solo il pulsante "Scrivimi su Instagram" (`SITE.instagramDm`) e, quando il proprietario fornisce il numero, "Scrivimi su WhatsApp" (`SITE.whatsapp`).
+- **Condivisione**: `shareRow()` in `src/templates.js` (WhatsApp + menu di sistema/copia link) su album e articoli; nella foto ingrandita "Condividi" manda il link `.../album/slug#foto-N`, che riapre quella foto.
+- **Google**: `functions/sitemap.xml.js`, `functions/robots.txt.js`, canonical, Open Graph con immagine generica `public/assets/og.png`, dati strutturati in home.
+- `LEAGUE` in `src/config.js`: le 15 squadre della Seconda Categoria Girone B (suggerite come avversario nel pannello, serviranno per il gioco).
 - Home: accanto al titolo scorrono in dissolvenza le foto segnate "In home" dal pannello (massimo 6); se non ce ne sono resta la copertina dell'ultimo album.
 - Caratteri: **Montserrat** (titoli, logo), **Poppins** (testo), **Newsreader** (testi lunghi, articoli).
 - **Nessuna filigrana** sulle foto: il proprietario l'ha tolta. Non reintrodurla senza sua richiesta.
@@ -47,7 +51,7 @@ Poi apri http://localhost:8788 e http://localhost:8788/gestione. Prima di conseg
 
 ## Idee già concordate per il futuro
 
-- **Tappa 2** (approvata): pagina "Richiedi un servizio" con prezzi "su richiesta" e solo modulo di ricontatto (nome, email o telefono, messaggio) che arriva per email al proprietario e nel pannello; voce di menu "Contatti"; pulsanti Condividi su WhatsApp/Instagram; SEO (sitemap, anteprime, descrizioni).
-- **Tappa 3** (approvata): "Foto della settimana" con voto e mini-gioco dei rigori in una pagina a parte, raggiungibile dalla pagina del Villaperuccio.
+- Tappe 1 e 2 fatte (Villaperuccio, foto in home, Contatti, condivisione, Google).
+- **Tappa 3** (approvata): "Foto della settimana" con voto e mini-gioco dei rigori in una pagina a parte, raggiungibile dalla pagina del Villaperuccio. Nel gioco il proprietario vuole le squadre di `LEAGUE` con i loro stemmi: gli stemmi appartengono alle società e l'unica fonte ricevuta è uno screenshot a bassa risoluzione, quindi usare scudetti disegnati con i colori sociali finché non arrivano i file ufficiali (e il consenso delle società).
 - Download in **massima qualità a pagamento** (pulsante già presente e disattivato nella foto ingrandita; gli originali sono già salvati in `originals/`).
 - Dominio personalizzato (da collegare in Cloudflare Pages → Custom domains).

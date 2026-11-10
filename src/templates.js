@@ -8,9 +8,9 @@ export const logo = (tag = "a", attrs = 'href="/"') =>
   `<${tag} class="logo" ${attrs} aria-label="${SITE.name}, home"><span class="d">D.</span><span class="s">Sport</span></${tag}>`;
 
 // Da aumentare a ogni modifica di site.css / site.js: obbliga i browser a scaricare la versione nuova.
-const ASSET_VERSION = "5";
+const ASSET_VERSION = "6";
 
-const MENU = [["home", "/", "Home"], ["album", "/album", "Album"], ["articoli", "/articoli", "Articoli"], ["villaperuccio", "/villaperuccio", "Villaperuccio"], ["chi-sono", "/#chi-sono", "Chi sono"]];
+const MENU = [["home", "/", "Home"], ["album", "/album", "Album"], ["articoli", "/articoli", "Articoli"], ["villaperuccio", "/villaperuccio", "Villaperuccio"], ["chi-sono", "/#chi-sono", "Chi sono"], ["contatti", "/contatti", "Contatti"]];
 
 // Logo grande al centro; sotto, separato da una linea, il menu centrato che resta fisso in alto scorrendo.
 function header(active) {
@@ -35,8 +35,21 @@ function footer() {
 </div></footer>`;
 }
 
-export function page({ title, description = SITE.description, image = "", url = "", body, scripts = "", active = "" }) {
+// Pulsanti per mandare il link di una pagina su WhatsApp o in un'altra app (Instagram compreso, dal telefono).
+export function shareRow(title, url) {
+  const text = encodeURIComponent(`${title} · ${SITE.name}\n${url}`);
+  return `<div class="share">
+  <span>Condividi</span>
+  <a class="chipbtn" href="https://wa.me/?text=${text}" target="_blank" rel="noopener">WhatsApp</a>
+  <button class="chipbtn" type="button" data-share="${esc(url)}" data-title="${esc(title)}">Instagram e altre app</button>
+</div>`;
+}
+
+export function page({ title, description = SITE.description, image = "", url = "", body, scripts = "", active = "", type = "website", jsonLd = null }) {
   const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} · ${SITE.tagline}`;
+  // Indirizzo "ufficiale" della pagina e immagine di anteprima (quella generica se la pagina non ne ha una).
+  const canonical = url ? url.split(/[?#]/)[0] : "";
+  const ogImage = image || (url ? new URL("/assets/og.png", url).href : "");
   return `<!doctype html>
 <html lang="it">
 <head>
@@ -47,8 +60,11 @@ export function page({ title, description = SITE.description, image = "", url = 
 <meta property="og:site_name" content="${SITE.name}">
 <meta property="og:title" content="${esc(title || SITE.name)}">
 <meta property="og:description" content="${esc(description)}">
-${url ? `<meta property="og:url" content="${esc(url)}">` : ""}
-${image ? `<meta property="og:image" content="${esc(image)}"><meta name="twitter:card" content="summary_large_image">` : ""}
+<meta property="og:type" content="${type}">
+<meta property="og:locale" content="it_IT">
+${canonical ? `<link rel="canonical" href="${esc(canonical)}"><meta property="og:url" content="${esc(canonical)}">` : ""}
+${ogImage ? `<meta property="og:image" content="${esc(ogImage)}"><meta name="twitter:card" content="summary_large_image">` : ""}
+${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, "\\u003c")}</script>` : ""}
 <meta name="theme-color" content="#F2EEE6">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
