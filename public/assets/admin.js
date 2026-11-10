@@ -58,14 +58,14 @@
   async function dashboard() {
     app.innerHTML = loading;
     try {
-      const [{ albums }, { articles }, { matches }, { scores }] = await Promise.all([api("GET", "/api/admin/albums"), api("GET", "/api/admin/articles"), api("GET", "/api/admin/matches"), api("GET", "/api/admin/scores")]);
+      const [{ albums }, { articles }, { matches }] = await Promise.all([api("GET", "/api/admin/albums"), api("GET", "/api/admin/articles"), api("GET", "/api/admin/matches")]);
       app.innerHTML = `
       <section class="panel">
         <div class="panel-head"><h1>Album</h1><a class="btn solid" href="#album-nuovo">+ Nuovo album</a></div>
         ${albums.length ? `<ul class="items">${albums.map((a) => `<li><a href="#album-${a.id}">
             <span class="thumb">${a.cover_key ? `<img src="${thumbUrl(a.cover_key)}" alt="">` : ""}</span>
-            <span class="txt"><b>${esc(a.title)}</b><small>${[fmtDate(a.date), `${a.photo_count} foto`, a.has_password ? "con password" : ""].filter(Boolean).join(" · ")}</small></span>
-            ${a.published ? "" : `<span class="badge">Bozza</span>`}</a></li>`).join("")}</ul>`
+            <span class="txt"><b>${esc(a.title)}</b><small>${[fmtDate(a.date), `${a.photo_count} foto`, a.has_password && !a.private ? "con password" : ""].filter(Boolean).join(" · ")}</small></span>
+            ${a.private ? `<span class="badge lock">Privata</span>` : ""}${a.published ? "" : `<span class="badge">Bozza</span>`}</a></li>`).join("")}</ul>`
           : `<p class="muted">Nessun album. Crea il primo con «Nuovo album».</p>`}
       </section>
       <section class="panel">
@@ -84,17 +84,13 @@
           : `<p class="muted">Nessun articolo. Scrivi il primo con «Nuovo articolo».</p>`}
       </section>
       <section class="panel">
-        <div class="panel-head"><h1>Classifica dei rigori</h1><a class="btn" href="/rigori" target="_blank" rel="noopener">Apri il gioco ↗</a></div>
-        <p class="muted small">I nomi li scrivono i visitatori: se ne trovi uno inopportuno, eliminalo da qui.</p>
-        ${scores.length ? `<ul class="items">${scores.map((s) => `<li class="plain"><span class="txt"><b>${esc(s.name)}</b><small>${esc(s.team)} · ${s.score} punti</small></span>
-            <button class="btn danger-btn small-btn" type="button" data-del-score="${s.id}">Elimina</button></li>`).join("")}</ul>`
-          : `<p class="muted">Nessun punteggio salvato per ora.</p>`}
+        <div class="panel-head"><h1>Classifica del girone</h1><a class="btn solid" href="#classifica">Aggiorna classifica</a></div>
+        <p class="muted small">Punti e partite giocate delle 15 squadre: compaiono nella pagina Villaperuccio.</p>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h1>Foto della settimana</h1><a class="btn solid" href="#settimana">Scrivi il testo</a></div>
+        <p class="muted small">Titolo e cronaca che accompagnano in home la foto più votata dell'ultimo album.</p>
       </section>`;
-      app.querySelectorAll("[data-del-score]").forEach((b) => confirmButton(b, "Conferma", async () => {
-        await api("DELETE", `/api/admin/scores/${b.dataset.delScore}`);
-        toast("Punteggio eliminato.");
-        dashboard();
-      }));
     } catch (e) {
       app.innerHTML = errorBox(e.message);
     }
@@ -131,6 +127,8 @@
         <input id="f-password" name="password" type="text" autocomplete="off" autocapitalize="off" maxlength="100" placeholder="${album.has_password ? "Nuova password (facoltativa)" : "Es. VILLA2026"}">
         ${album.has_password ? `<label class="check"><input type="checkbox" id="f-remove-pw"> Rimuovi la password</label>` : ""}
       </fieldset>
+      <label class="check"><input type="checkbox" id="f-private" ${album.private ? "checked" : ""}> Galleria privata per un cliente</label>
+      <p class="muted small">Non compare in home, negli album né su Google: si apre solo dal link, dopo aver inserito la password qui sopra. Usala per consegnare un lavoro.</p>
       <label class="check"><input type="checkbox" id="f-published" ${album.published ? "checked" : ""}> Pubblicato (visibile sul sito)</label>
       <p class="err" id="form-err" hidden></p>
       <div class="acts"><button class="btn solid" type="submit">${id ? "Salva modifiche" : "Crea album"}</button></div>
@@ -163,6 +161,7 @@
         place: document.getElementById("f-place").value,
         intro: document.getElementById("f-intro").value,
         published: document.getElementById("f-published").checked,
+        private: document.getElementById("f-private").checked,
         password: document.getElementById("f-password").value,
         remove_password: document.getElementById("f-remove-pw")?.checked || false,
       };
@@ -197,6 +196,7 @@
         <img src="${thumbUrl(p.key)}" alt="" loading="lazy">
         ${p.id === coverId() ? `<span class="badge cover">Copertina</span>` : ""}
         <button type="button" class="feat${p.featured ? " on" : ""}" data-feat="${p.id}" aria-pressed="${p.featured ? "true" : "false"}" title="Mostra questa foto tra quelle che scorrono in home">${p.featured ? "★ In home" : "☆ Home"}</button>
+        <button type="button" class="feat second${p.portfolio ? " on" : ""}" data-port="${p.id}" aria-pressed="${p.portfolio ? "true" : "false"}" title="Mostra questa foto nella pagina Portfolio">${p.portfolio ? "★ Portfolio" : "☆ Portfolio"}</button>
         <div class="pacts">
           ${p.id === coverId() ? "" : `<button type="button" data-cover="${p.id}">Copertina</button>`}
           <button type="button" data-del="${p.id}">Elimina</button>
@@ -208,6 +208,15 @@
           photo.featured = photo.featured ? 0 : 1;
           renderGrid();
           toast(photo.featured ? "Foto aggiunta alla home." : "Foto tolta dalla home.");
+        } catch (e) { toast(e.message, true); }
+      }));
+      grid.querySelectorAll("[data-port]").forEach((b) => b.addEventListener("click", async () => {
+        const photo = photos.find((p) => p.id === Number(b.dataset.port));
+        try {
+          await api("PUT", `/api/admin/photos/${photo.id}`, { portfolio: !photo.portfolio });
+          photo.portfolio = photo.portfolio ? 0 : 1;
+          renderGrid();
+          toast(photo.portfolio ? "Foto aggiunta al portfolio." : "Foto tolta dal portfolio.");
         } catch (e) { toast(e.message, true); }
       }));
       grid.querySelectorAll("[data-cover]").forEach((b) => b.addEventListener("click", async () => {
@@ -278,6 +287,70 @@
       await api("DELETE", `/api/admin/albums/${id}`);
       toast("Album eliminato.");
       location.hash = "";
+    });
+  }
+
+  /* ================= Classifica del girone ================= */
+  async function standingsEditor() {
+    app.innerHTML = loading;
+    let data;
+    try { data = await api("GET", "/api/admin/standings"); }
+    catch (e) { app.innerHTML = errorBox(e.message); return; }
+    app.innerHTML = `
+    <a class="back" href="#">← Torna all'elenco</a>
+    <div class="panel-head"><h1>Classifica del girone</h1><a class="btn" href="/villaperuccio" target="_blank" rel="noopener">Vedi sul sito ↗</a></div>
+    <form id="st-form" class="panel form" novalidate>
+      <p class="muted small">Scrivi i punti di ogni squadra (e, se vuoi, le partite giocate). L'ordine sul sito si sistema da solo. ${data.updated ? `Ultimo aggiornamento: ${fmtDate(data.updated)}.` : ""}</p>
+      <div class="st-grid" role="group" aria-label="Classifica">
+        <span class="st-h">Squadra</span><span class="st-h">Giocate</span><span class="st-h">Punti</span>
+        ${data.rows.map((r, i) => `<label class="st-team" for="st-p-${i}">${esc(r.team)}</label>
+          <input type="number" inputmode="numeric" min="0" max="60" id="st-g-${i}" data-team="${esc(r.team)}" data-k="played" value="${r.played}" aria-label="Partite giocate, ${esc(r.team)}">
+          <input type="number" inputmode="numeric" min="-20" max="200" id="st-p-${i}" data-team="${esc(r.team)}" data-k="points" value="${r.points}" aria-label="Punti, ${esc(r.team)}">`).join("")}
+      </div>
+      <p class="err" id="form-err" hidden></p>
+      <div class="acts"><button class="btn solid" type="submit">Salva classifica</button></div>
+    </form>`;
+    document.getElementById("st-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const err = document.getElementById("form-err"), btn = e.target.querySelector("[type=submit]");
+      const rows = {};
+      e.target.querySelectorAll("input[data-team]").forEach((i) => { (rows[i.dataset.team] ||= { team: i.dataset.team })[i.dataset.k] = Number(i.value || 0); });
+      err.hidden = true; btn.disabled = true;
+      try {
+        await api("PUT", "/api/admin/standings", { rows: Object.values(rows) });
+        toast("Classifica salvata.");
+        standingsEditor();
+      } catch (ex) { err.textContent = ex.message; err.hidden = false; btn.disabled = false; }
+    });
+  }
+
+  /* ================= Foto della settimana ================= */
+  async function weekEditor() {
+    app.innerHTML = loading;
+    let w;
+    try { w = await api("GET", "/api/admin/week"); }
+    catch (e) { app.innerHTML = errorBox(e.message); return; }
+    app.innerHTML = `
+    <a class="back" href="#">← Torna all'elenco</a>
+    <div class="panel-head"><h1>Foto della settimana</h1><a class="btn" href="/" target="_blank" rel="noopener">Vedi la home ↗</a></div>
+    <form id="wk-form" class="panel form" novalidate>
+      <p class="muted small">In home compare la foto più votata dell'ultimo album. Qui puoi aggiungere un titolo e un breve racconto: il protagonista, l'azione, la cronaca della giornata. Lasciali vuoti per mostrare solo la foto.</p>
+      <div class="field"><label for="wk-title">Titolo</label><input id="wk-title" maxlength="120" value="${esc(w.title)}" placeholder="Es. Il protagonista: una doppietta che vale il primo posto"></div>
+      <div class="field"><label for="wk-text">Testo</label>
+        <textarea id="wk-text" rows="8" maxlength="4000" placeholder="Racconta il momento della foto…">${esc(w.text)}</textarea>
+        <p class="muted small">Riga vuota = nuovo paragrafo · <code>**grassetto**</code> · <code>*corsivo*</code>. Ricordati di aggiornarlo quando pubblichi un nuovo album.</p></div>
+      <p class="err" id="form-err" hidden></p>
+      <div class="acts"><button class="btn solid" type="submit">Salva</button></div>
+    </form>`;
+    document.getElementById("wk-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const err = document.getElementById("form-err"), btn = e.target.querySelector("[type=submit]");
+      err.hidden = true; btn.disabled = true;
+      try {
+        await api("PUT", "/api/admin/week", { title: document.getElementById("wk-title").value, text: document.getElementById("wk-text").value });
+        toast("Testo salvato.");
+        btn.disabled = false;
+      } catch (ex) { err.textContent = ex.message; err.hidden = false; btn.disabled = false; }
     });
   }
 
@@ -568,6 +641,8 @@
     window.scrollTo(0, 0);
     if (h === "album-nuovo") return albumEditor(null);
     if ((m = /^album-(\d+)$/.exec(h))) return albumEditor(Number(m[1]));
+    if (h === "classifica") return standingsEditor();
+    if (h === "settimana") return weekEditor();
     if (h === "partita-nuova") return matchEditor(null);
     if ((m = /^partita-(\d+)$/.exec(h))) return matchEditor(Number(m[1]));
     if (h === "articolo-nuovo") return articleEditor(null);

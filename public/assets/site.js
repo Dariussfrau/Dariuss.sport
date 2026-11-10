@@ -196,7 +196,22 @@ document.addEventListener("click", async (e) => {
   }
 
   /* ---------- Album completo ---------- */
+  // Galleria privata: la password è già stata inserita all'ingresso, quindi si passa subito al riepilogo.
+  async function privateDownload() {
+    try {
+      const res = await fetch(`/api/album/${encodeURIComponent(album.slug)}/zip`, { method: "POST", headers: { "content-type": "application/json" }, body: "{}" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Download non disponibile.");
+      termsDialog({
+        title: "Album completo",
+        rows: [["File", data.zipName], ["Contenuto", `${data.files.length} foto · JPG 2048 px`], ["Peso stimato", `circa ${Math.max(1, Math.round(data.files.length * 1.3))} MB`]],
+        onOk: () => buildZip(data),
+      });
+    } catch (ex) { toast(ex.message); }
+  }
+
   function albumDownload() {
+    if (album.private) return privateDownload();
     openDlg(`<h2 id="dlg-title">Album completo</h2>
       <p style="font-size:15px;color:#3c4a3d">Per scaricare tutte le ${photos.length} foto di <b>${esc(album.title)}</b> in un unico file serve la password che ti ho dato.</p>
       <form id="pwform" novalidate>

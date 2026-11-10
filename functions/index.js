@@ -4,18 +4,21 @@ import { jersey, loadMatches, matchCard, pickMatches } from "../src/matches.js";
 import { albumCard, articleRow, logo, page, withErrors } from "../src/templates.js";
 import { esc, formatDate, html, photoUrl } from "../src/util.js";
 import { photoOfTheWeek } from "../src/votes.js";
+import { getSettings } from "../src/settings.js";
+import { renderMarkdown } from "../src/markdown.js";
 
 export const onRequestGet = withErrors(async ({ env, request }) => {
   const DB = await getDb(env);
   const [albums, articles, featured, matches] = await Promise.all([
-    DB.prepare(`${ALBUM_SELECT} WHERE a.published = 1 ORDER BY a.date DESC, a.id DESC LIMIT 9`).all(),
+    DB.prepare(`${ALBUM_SELECT} WHERE a.published = 1 AND a.private = 0 ORDER BY a.date DESC, a.id DESC LIMIT 9`).all(),
     DB.prepare(`SELECT * FROM articles WHERE published = 1 ORDER BY date DESC, id DESC LIMIT 5`).all(),
     // Foto scelte dal pannello ("In home"): scorrono in dissolvenza accanto al titolo.
     DB.prepare(`SELECT p.key, a.slug, a.title, a.competition, a.date FROM photos p JOIN albums a ON a.id = p.album_id
-                WHERE p.featured = 1 AND a.published = 1 ORDER BY a.date DESC, p.position, p.id LIMIT 6`).all(),
+                WHERE p.featured = 1 AND a.published = 1 AND a.private = 0 ORDER BY a.date DESC, p.position, p.id LIMIT 6`).all(),
     loadMatches(DB),
   ]);
   const week = await photoOfTheWeek(DB);
+  const note = week ? await getSettings(DB, ["week_title", "week_text"]) : {};
   const { next, last } = pickMatches(matches);
   const latest = albums.results[0];
   const origin = new URL(request.url).origin;
@@ -46,13 +49,17 @@ export const onRequestGet = withErrors(async ({ env, request }) => {
   </div></section>`
     : "";
 
+  // Fascia "Foto della settimana": la foto più votata, con il titolo e la cronaca scritti dal pannello (se ci sono).
+  const votesLine = week && (week.votes ? `In testa con ${week.votes} ${week.votes === 1 ? "voto" : "voti"}.` : "La votazione è aperta.");
   const weekBand = week
     ? `<section class="potw"><div class="wrap potw-in reveal">
     <a class="potw-img" href="/album/${esc(week.album.slug)}${week.votes ? `#foto-${week.number}` : ""}"><img src="${photoUrl(week.photo.key)}" alt="${esc(week.album.title)}, foto ${week.number}" loading="lazy"></a>
     <div>
       <div class="eyebrow">Foto della settimana</div>
-      <h2>${esc(week.album.title)}</h2>
-      <p>${week.votes ? `In testa con ${week.votes} ${week.votes === 1 ? "voto" : "voti"}.` : "La votazione è aperta."} Scegli lo scatto che preferisci: il più votato resta qui in evidenza.</p>
+      <h2>${esc(note.week_title || week.album.title)}</h2>
+      ${note.week_title ? `<p class="potw-from">${esc(week.album.title)} · ${formatDate(week.album.date)}</p>` : ""}
+      ${note.week_text ? `<div class="potw-text">${renderMarkdown(note.week_text)}</div>` : ""}
+      <p class="potw-votes">${votesLine} Scegli lo scatto che preferisci: il più votato resta qui in evidenza.</p>
       <div class="btns"><a class="btn solid" href="/album/${esc(week.album.slug)}">Vota la tua preferita</a></div>
     </div>
   </div></section>`

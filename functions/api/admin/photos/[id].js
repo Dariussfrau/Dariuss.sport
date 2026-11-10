@@ -1,14 +1,19 @@
 import { getBucket, getDb } from "../../../../src/db.js";
 import { json } from "../../../../src/util.js";
 
-// Mette o toglie la foto dalle "foto in evidenza" che scorrono in home.
+// Mette o toglie la foto dalle "foto in evidenza" che scorrono in home e dal portfolio.
 export async function onRequestPut({ env, params, request }) {
   const DB = await getDb(env);
   const id = Number(params.id);
-  const { featured } = await request.json().catch(() => ({}));
-  const res = await DB.prepare(`UPDATE photos SET featured = ? WHERE id = ?`).bind(featured ? 1 : 0, id).run();
+  const input = await request.json().catch(() => ({}));
+  const sets = [], binds = [];
+  for (const field of ["featured", "portfolio"]) {
+    if (field in input) { sets.push(`${field} = ?`); binds.push(input[field] ? 1 : 0); }
+  }
+  if (!sets.length) return json({ error: "Niente da modificare." }, 400);
+  const res = await DB.prepare(`UPDATE photos SET ${sets.join(", ")} WHERE id = ?`).bind(...binds, id).run();
   if (!res.meta.changes) return json({ error: "Foto non trovata." }, 404);
-  return json({ ok: true, featured: featured ? 1 : 0 });
+  return json({ ok: true });
 }
 
 export async function onRequestDelete({ env, params }) {

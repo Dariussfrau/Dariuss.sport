@@ -18,6 +18,7 @@ export function readAlbumFields(input, { partial = false } = {}) {
     if (!partial || k in input) values[k] = str(input[k], max);
   }
   if (!partial || "published" in input) values.published = input.published === false || input.published === 0 ? 0 : 1;
+  if (!partial || "private" in input) values.private = input.private === true || input.private === 1 ? 1 : 0;
   if ("cover_photo_id" in input) values.cover_photo_id = input.cover_photo_id ? Number(input.cover_photo_id) : null;
   return { values };
 }

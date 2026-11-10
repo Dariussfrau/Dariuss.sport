@@ -55,19 +55,24 @@ const SCHEMA = [
     created_at TEXT NOT NULL DEFAULT (datetime('now')),
     PRIMARY KEY (album_id, voter)
   )`,
-  `CREATE TABLE IF NOT EXISTS scores (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    team TEXT NOT NULL,
-    score INTEGER NOT NULL,
-    beaten INTEGER NOT NULL DEFAULT 0,
-    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  `CREATE TABLE IF NOT EXISTS standings (
+    team TEXT PRIMARY KEY,
+    points INTEGER NOT NULL DEFAULT 0,
+    played INTEGER NOT NULL DEFAULT 0
   )`,
+  `CREATE TABLE IF NOT EXISTS settings (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL DEFAULT ''
+  )`,
+  // Il gioco dei rigori è stato tolto: si elimina anche la sua classifica.
+  `DROP TABLE IF EXISTS scores`,
 ];
 
 // Colonne aggiunte dopo la prima pubblicazione: se esistono già, l'errore viene ignorato.
 const MIGRATIONS = [
   `ALTER TABLE photos ADD COLUMN featured INTEGER NOT NULL DEFAULT 0`,
+  `ALTER TABLE albums ADD COLUMN private INTEGER NOT NULL DEFAULT 0`,
+  `ALTER TABLE photos ADD COLUMN portfolio INTEGER NOT NULL DEFAULT 0`,
 ];
 
 export class SetupError extends Error {}

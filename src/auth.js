@@ -54,3 +54,19 @@ export async function checkPassword(password, stored) {
   const [salt, hash] = stored.split(":");
   return safeEqual(hash, await sha256(salt + password));
 }
+
+// Gallerie private: chi inserisce la password dell'album riceve un cookie valido solo per quell'album.
+// Cambiando la password dell'album, i vecchi accessi smettono di valere.
+const albumToken = (env, album) => hmac(env.SESSION_SECRET || "", `album:${album.id}:${album.password_hash}`);
+
+export async function albumCookie(env, album) {
+  return `ds_a${album.id}=${await albumToken(env, album)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${30 * 86400}`;
+}
+
+export async function canViewAlbum(request, env, album) {
+  if (!album.private) return true;
+  if (!env.SESSION_SECRET || !album.password_hash) return isAdmin(request, env);
+  const match = (request.headers.get("cookie") || "").match(new RegExp(`(?:^|;\\s*)ds_a${album.id}=([0-9a-f]+)`));
+  if (match && safeEqual(match[1], await albumToken(env, album))) return true;
+  return isAdmin(request, env);
+}

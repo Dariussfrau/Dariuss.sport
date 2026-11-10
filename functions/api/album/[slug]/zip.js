@@ -1,4 +1,4 @@
-import { checkPassword } from "../../../../src/auth.js";
+import { canViewAlbum, checkPassword } from "../../../../src/auth.js";
 import { getDb } from "../../../../src/db.js";
 import { downloadName, json } from "../../../../src/util.js";
 
@@ -7,13 +7,17 @@ import { downloadName, json } from "../../../../src/util.js";
 export async function onRequestPost({ env, params, request }) {
   try {
     const DB = await getDb(env);
-    const album = await DB.prepare(`SELECT id, slug, password_hash FROM albums WHERE slug = ? AND published = 1`).bind(params.slug).first();
+    const album = await DB.prepare(`SELECT id, slug, private, password_hash FROM albums WHERE slug = ? AND published = 1`).bind(params.slug).first();
     if (!album || !album.password_hash) return json({ error: "Download dell'album non disponibile." }, 404);
 
-    const { password } = await request.json().catch(() => ({}));
-    if (!(await checkPassword(String(password || "").trim(), album.password_hash))) {
-      await new Promise((r) => setTimeout(r, 600)); // rallenta i tentativi a caso
-      return json({ error: "Password non corretta." }, 403);
+    // Galleria privata già aperta con la password: non la si chiede una seconda volta.
+    const alreadyIn = album.private && (await canViewAlbum(request, env, album));
+    if (!alreadyIn) {
+      const { password } = await request.json().catch(() => ({}));
+      if (!(await checkPassword(String(password || "").trim(), album.password_hash))) {
+        await new Promise((r) => setTimeout(r, 600)); // rallenta i tentativi a caso
+        return json({ error: "Password non corretta." }, 403);
+      }
     }
 
     const { results } = await DB.prepare(`SELECT id FROM photos WHERE album_id = ? ORDER BY position, id`).bind(album.id).all();

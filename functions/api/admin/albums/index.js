@@ -16,6 +16,7 @@ export async function onRequestPost({ env, request }) {
   const { values, error } = readAlbumFields(input);
   if (error) return json({ error }, 400);
   await applyPassword(values, input);
+  if (values.private && !values.password_hash) return json({ error: "Una galleria privata ha bisogno di una password: scrivila nel campo qui sopra." }, 400);
   values.slug = await slugFor(DB, "albums", values.title, values.date);
   const id = await insertRow(DB, "albums", values);
   const album = await DB.prepare(`${ALBUM_SELECT} WHERE a.id = ?`).bind(id).first();

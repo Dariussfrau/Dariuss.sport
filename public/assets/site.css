@@ -118,48 +118,32 @@ a.mlink:hover,.mteam:hover .mlink{text-decoration:underline}
 .potw-in{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:44px;align-items:center}
 .potw-img img{width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:6px;background:#e6e0d4}
 .potw h2{font:800 30px/1.1 var(--display);color:var(--forest);letter-spacing:-.015em;margin-top:14px}
-.potw p{margin-top:12px;color:var(--muted);max-width:44ch}
+.potw p{margin-top:12px;color:var(--muted);max-width:48ch}
+.potw .potw-from{font-size:13px;color:var(--sage);margin-top:8px}
+.potw-text p{font-family:var(--serif);font-size:18px;line-height:1.6;color:#2c372e}
+.potw .potw-votes{font-size:14px}
 
-/* Il campionato dei rigori */
-.playcard{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-top:40px;padding:22px 24px;border-radius:12px;background:var(--forest);color:rgba(242,238,230,.8);text-decoration:none;font-size:15px}
-.playcard > span:first-child{display:grid;gap:4px;min-width:0}
-.playcard b{font:800 22px/1.2 var(--display);color:var(--cream)}
-.playcard .btn{background:var(--cream);border-color:var(--cream);color:var(--forest)}
-.rigori{display:grid;gap:48px;padding-bottom:24px}
-.rg-teams{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
-.rg-team{display:flex;align-items:center;gap:12px;padding:10px 14px;border:1.5px solid var(--line);border-radius:10px;background:rgba(255,255,255,.5);font:600 15px/1.2 var(--display);color:var(--forest);text-align:left;transition:border-color .15s,background-color .15s}
-.rg-team:hover,.rg-team:focus-visible{border-color:var(--green);background:#fff}
-.rg-team svg{flex:none}
-.rg-hud{display:flex;justify-content:space-between;align-items:center;gap:8px 16px;flex-wrap:wrap;max-width:440px;margin:0 auto 12px;font-size:13px;color:var(--muted)}
-.rg-vs{flex-basis:100%}
-.rg-vs b{color:var(--forest);font-weight:600}
-.rg-dots{display:flex;gap:6px;font-size:18px;line-height:1;color:var(--sage)}
-.rg-dots i{font-style:normal}
-.rg-dots .g{color:var(--green)} .rg-dots .m{color:var(--danger)}
-.rg-score b{font:800 20px/1 var(--display);color:var(--forest);font-variant-numeric:tabular-nums}
-.rg-stage{position:relative;max-width:440px;margin:0 auto}
-.rg-stage canvas{display:block;width:100%;aspect-ratio:360/520;border-radius:12px;touch-action:none;cursor:crosshair;background:#43703F}
-.rg-msg{position:absolute;left:0;right:0;top:44%;text-align:center;font:800 30px/1.1 var(--display);color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.6);pointer-events:none;padding-inline:12px}
-.rg-msg.bad{color:#FFD9D2}
-.rg-panel{position:absolute;inset:0;display:grid;place-content:center;gap:12px;padding:24px;background:rgba(15,26,18,.88);border-radius:12px;color:rgba(242,238,230,.85);text-align:center;font-size:15px}
-.rg-panel h3{font:800 28px/1.1 var(--display);color:var(--cream)}
-.rg-panel b{color:var(--cream)}
-.rg-panel form{display:grid;gap:10px;margin-top:6px}
-.rg-panel label{font:600 13px/1.2 var(--display);color:var(--cream)}
-.rg-panel input{font:500 16px/1.2 var(--body);padding:12px 13px;border:0;border-radius:8px;background:#fff;color:var(--ink);text-align:center}
-.rg-panel .acts{justify-content:center;margin-top:6px}
-.rg-panel .btn{border-color:var(--cream);color:var(--cream)}
-.rg-panel .btn.solid{background:var(--cream);color:var(--forest)}
-.rg-panel .err{color:#FFB4A8}
-.rg-hint{max-width:440px;margin:12px auto 0;text-align:center;font-size:13px;color:var(--muted)}
-.rg-board ol{list-style:none;margin:0;padding:0;counter-reset:rank;max-width:560px}
-.rg-board li{counter-increment:rank;display:flex;align-items:center;gap:16px;padding-block:13px;border-bottom:1px solid var(--line)}
-.rg-board li:first-child{border-top:1px solid var(--line)}
-.rg-board li:not(.empty)::before{content:counter(rank);font:800 18px/1 var(--display);color:var(--green);width:26px;text-align:right;font-variant-numeric:tabular-nums}
-.rg-board .nm{display:grid;flex:1;min-width:0;font:600 16px/1.3 var(--display);color:var(--forest);overflow-wrap:anywhere}
-.rg-board small{font:400 12px/1.4 var(--body);color:var(--sage)}
-.rg-board li > b{font:800 18px/1 var(--display);color:var(--forest);font-variant-numeric:tabular-nums}
-.rg-board .empty{color:var(--muted);font-size:15px}
+/* Classifica del girone */
+.standings-head{margin-top:56px}
+.standings-wrap{overflow-x:auto;margin-bottom:24px}
+.standings{width:100%;max-width:640px;border-collapse:collapse;font-size:15px}
+.standings caption{text-align:left;font-size:13px;color:var(--sage);padding-bottom:12px}
+.standings th,.standings td{padding:11px 10px;border-bottom:1px solid var(--line);text-align:left}
+.standings thead th{font:600 11px/1 var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--sage);border-bottom-color:rgba(30,58,30,.3)}
+.standings tbody th{font:600 15px/1.3 var(--display);color:var(--forest)}
+.standings .pos{width:44px;color:var(--sage);font-variant-numeric:tabular-nums}
+.standings .num{text-align:right;font-variant-numeric:tabular-nums}
+.standings .pts{font:800 16px/1 var(--display);color:var(--forest)}
+.standings tr.us th,.standings tr.us td{background:rgba(246,207,42,.2)}
+.standings tr.us .pos{box-shadow:inset 5px 0 0 var(--team-r);color:var(--forest);font-weight:600}
+
+/* Gallerie private */
+.chip.lock{background:var(--forest);border-color:var(--forest);color:var(--cream)}
+.private-head{padding-top:40px}
+.gate-note{color:var(--muted);font-size:15px}
+
+/* Collegamenti di solo testo: area toccabile più alta, comoda per il dito */
+.sec-head a,a.mlink,.gallery figcaption a.exif{display:inline-block;padding-block:8px}
 
 /* Condivisione */
 .share{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:22px;font:600 12px/1 var(--display);letter-spacing:.1em;text-transform:uppercase;color:var(--sage)}
@@ -258,7 +242,7 @@ section.block{padding-block:56px;border-top:1px solid var(--line)}
 .cover-fig img{border-radius:4px;width:100%}
 
 /* Lightbox */
-.lb{position:fixed;inset:0;z-index:80;background:rgba(8,14,10,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#F2EEE6;
+.lb{position:fixed;inset:0;z-index:80;background:#0b120d;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#F2EEE6;
   padding:calc(16px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
 .lb img{max-width:100%;max-height:calc(100% - 130px);width:auto;height:auto;object-fit:contain;border-radius:2px}
 .lb .info{font-size:13px;font-variant-numeric:tabular-nums;opacity:.8;text-align:center}
@@ -314,8 +298,8 @@ section.block{padding-block:56px;border-top:1px solid var(--line)}
   .brand-in{padding-block:14px 22px}
   .ig-corner{position:static;order:-1;font-size:12px;padding:0 0 12px}
   .menu-in{padding-block:10px}
-  .menu{gap:4px}
-  .menu a{font-size:13.5px;padding:10px 13px;letter-spacing:.02em}
+  .menu{gap:4px 2px}
+  .menu a{font-size:13px;padding:10px 11px;letter-spacing:.01em}
   .dlg .box{padding:20px}
 }
 /* Foto e album che emergono scorrendo (solo se il browser non chiede di ridurre il movimento) */

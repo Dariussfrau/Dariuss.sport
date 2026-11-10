@@ -5,7 +5,7 @@ const COOKIE = "ds_voter";
 export function votingAlbum(DB) {
   return DB.prepare(
     `SELECT a.id, a.slug, a.title, a.competition, a.date FROM albums a
-     WHERE a.published = 1 AND EXISTS (SELECT 1 FROM photos p WHERE p.album_id = a.id)
+     WHERE a.published = 1 AND a.private = 0 AND EXISTS (SELECT 1 FROM photos p WHERE p.album_id = a.id)
      ORDER BY a.date DESC, a.id DESC LIMIT 1`
   ).first();
 }

@@ -8,9 +8,9 @@ export const logo = (tag = "a", attrs = 'href="/"') =>
   `<${tag} class="logo" ${attrs} aria-label="${SITE.name}, home"><span class="d">D.</span><span class="s">Sport</span></${tag}>`;
 
 // Da aumentare a ogni modifica di site.css / site.js: obbliga i browser a scaricare la versione nuova.
-export const ASSET_VERSION = "7";
+export const ASSET_VERSION = "8";
 
-const MENU = [["home", "/", "Home"], ["album", "/album", "Album"], ["articoli", "/articoli", "Articoli"], ["villaperuccio", "/villaperuccio", "Villaperuccio"], ["chi-sono", "/#chi-sono", "Chi sono"], ["contatti", "/contatti", "Contatti"]];
+const MENU = [["home", "/", "Home"], ["portfolio", "/portfolio", "Portfolio"], ["album", "/album", "Album"], ["articoli", "/articoli", "Articoli"], ["villaperuccio", "/villaperuccio", "Villaperuccio"], ["chi-sono", "/#chi-sono", "Chi sono"], ["contatti", "/contatti", "Contatti"]];
 
 // Logo grande al centro; sotto, separato da una linea, il menu centrato che resta fisso in alto scorrendo.
 function header(active) {
@@ -45,7 +45,7 @@ export function shareRow(title, url) {
 </div>`;
 }
 
-export function page({ title, description = SITE.description, image = "", url = "", body, scripts = "", active = "", type = "website", jsonLd = null }) {
+export function page({ title, description = SITE.description, image = "", url = "", body, scripts = "", active = "", type = "website", jsonLd = null, noindex = false }) {
   const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} · ${SITE.tagline}`;
   // Indirizzo "ufficiale" della pagina e immagine di anteprima (quella generica se la pagina non ne ha una).
   const canonical = url ? url.split(/[?#]/)[0] : "";
@@ -65,6 +65,7 @@ export function page({ title, description = SITE.description, image = "", url = 
 ${canonical ? `<link rel="canonical" href="${esc(canonical)}"><meta property="og:url" content="${esc(canonical)}">` : ""}
 ${ogImage ? `<meta property="og:image" content="${esc(ogImage)}"><meta name="twitter:card" content="summary_large_image">` : ""}
 ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, "\\u003c")}</script>` : ""}
+${noindex ? `<meta name="robots" content="noindex, nofollow">` : ""}
 <meta name="theme-color" content="#F2EEE6">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">

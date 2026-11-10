@@ -1,6 +1,7 @@
 import { SITE } from "../src/config.js";
 import { getDb } from "../src/db.js";
 import { jersey, loadMatches, matchCard, matchRow, pickMatches } from "../src/matches.js";
+import { loadStandings, standingsTable } from "../src/standings.js";
 import { page, withErrors } from "../src/templates.js";
 import { esc, html } from "../src/util.js";
 
@@ -8,19 +9,21 @@ import { esc, html } from "../src/util.js";
 export const onRequestGet = withErrors(async ({ env, request }) => {
   const DB = await getDb(env);
   const matches = await loadMatches(DB);
+  const standings = await loadStandings(DB);
   const { next, last } = pickMatches(matches);
   const team = esc(SITE.team.name);
 
   const body = `<main class="wrap listing team">
   <div class="team-head">
     ${jersey(96)}
-    <div class="d-head"><div class="eyebrow">La squadra che seguo</div><h1>${team}</h1><p>La stagione raccontata da bordo campo: partite, risultati e album fotografici.</p></div>
+    <div class="d-head"><div class="eyebrow">La squadra che seguo</div><h1>${team}</h1><p>La stagione raccontata da bordo campo: partite, risultati, classifica e album fotografici.</p></div>
   </div>
   <div class="team-stripe" aria-hidden="true"></div>
   ${next || last ? `<div class="mcards">${next ? matchCard(next, "Prossima partita") : ""}${last ? matchCard(last, "Ultimo risultato") : ""}</div>` : ""}
   <div class="sec-head"><h2>Partite</h2><span>${matches.length ? `${matches.length} in calendario` : ""}</span></div>
   ${matches.length ? `<ul class="mlist">${matches.map(matchRow).join("")}</ul>` : `<p class="empty">Il calendario arriva presto.</p>`}
-  <a class="playcard" href="/rigori"><span><b>Il campionato dei rigori</b>Scegli una squadra del girone e sfida le altre: cinque rigori a turno.</span><span class="btn solid">Gioca</span></a>
+  <div class="sec-head standings-head"><h2>Classifica</h2><span>Seconda Categoria · Girone B</span></div>
+  ${standingsTable(standings)}
 </main>`;
 
   return html(page({

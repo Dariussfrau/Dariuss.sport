@@ -26,6 +26,9 @@ export async function onRequestPut({ env, params, request }) {
   const { values, error } = readAlbumFields(input, { partial: true });
   if (error) return json({ error }, 400);
   await applyPassword(values, input);
+  const isPrivate = "private" in values ? values.private : current.private;
+  const hash = "password_hash" in values ? values.password_hash : current.password_hash;
+  if (isPrivate && !hash) return json({ error: "Una galleria privata ha bisogno di una password: scrivila nel campo qui sopra." }, 400);
   // Lo slug (l'indirizzo della pagina) cambia solo se cambiano titolo o data.
   const title = values.title ?? current.title, date = values.date ?? current.date;
   if (title !== current.title || date !== current.date) values.slug = await slugFor(DB, "albums", title, date, id);

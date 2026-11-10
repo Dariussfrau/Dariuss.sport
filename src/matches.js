@@ -8,7 +8,7 @@ export function todayRome() {
 
 export async function loadMatches(DB) {
   const { results } = await DB.prepare(
-    `SELECT m.*, a.slug AS album_slug, a.published AS album_published
+    `SELECT m.*, a.slug AS album_slug, (a.published = 1 AND a.private = 0) AS album_published
      FROM matches m LEFT JOIN albums a ON a.id = m.album_id
      ORDER BY m.date DESC, m.time DESC, m.id DESC`
   ).all();
