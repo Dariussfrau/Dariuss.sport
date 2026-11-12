@@ -5,13 +5,21 @@ export const SITE = {
   description: "Il calcio di provincia visto dal bordo campo: album delle partite da scaricare in HD e racconti dalla giornata sportiva.",
   instagram: "https://www.instagram.com/dariuss.sport/",
   handle: "@dariuss.sport",
-  bio: "Sono Dario e racconto il calcio dilettantistico con la fotografia. Mi interessano i volti, i contrasti e i momenti che durano un attimo: quelli che dalla tribuna non si vedono.",
-  // Messaggio diretto su Instagram (apre la chat) e, se indicato, WhatsApp.
-  instagramDm: "https://ig.me/m/dariuss.sport",
+  // Testo della sezione "Chi sono" in home: un paragrafo per riga.
+  bio: [
+    "Sono Dario e racconto il calcio dilettantistico e qualsiasi altro evento sportivo con la fotografia. Mi interessano i volti, i contrasti e i momenti che durano un attimo: quelli che dalla tribuna non si vedono.",
+    "Tutto nasce da una collaborazione partita nel 2024 con la società dell'ASD Villaperuccio, che mi propose di seguire i suoi match da bordocampo con le mie foto. Io, arrivando da tutt'altro genere di fotografia, non ho esitato ad accettare la proposta. Non pensavo che in breve tempo mi avrebbe regalato parecchie emozioni vissute assieme ai risultati della squadra.",
+    "Il fotografo da bordocampo deve quasi essere invisibile, discreto, non giudica, non si attiva in nessun'altra necessità oltre a quella fotografica, gioisce e soffre in silenzio portando con sé la voglia di regalare bei ricordi ad ogni match.",
+  ],
+  // Contatti: si usa il profilo Instagram (il link diretto alla chat non funziona per chi non è collegato).
   // Numero WhatsApp con prefisso internazionale e senza spazi, es. "393331234567". Vuoto = pulsante nascosto.
   whatsapp: "",
   // Squadra seguita. Maglia di casa: rossa con banda gialla centrale.
-  team: { name: "Villaperuccio", yellow: "#F6CF2A", red: "#E0262B" },
+  team: {
+    name: "Villaperuccio", yellow: "#F6CF2A", red: "#E0262B",
+    // Calendario ufficiale del girone su Tuttocampo.
+    calendar: "https://www.tuttocampo.it/Sardegna/CI/SecondaCategoria/GironeB/Calendario",
+  },
   // Servizi della pagina Contatti: tutti "su richiesta".
   services: [
     ["Partite", "Il racconto fotografico completo della gara, da bordo campo: azioni, esultanze, panchina. Album online con download in HD."],

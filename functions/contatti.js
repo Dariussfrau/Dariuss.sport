@@ -23,8 +23,8 @@ export const onRequestGet = withErrors(async ({ request }) => {
 
   <div class="cta">
     <h2>Parliamone</h2>
-    <p>Rispondo personalmente a ogni messaggio. Scrivimi in privato e indicami data, luogo e tipo di evento.</p>
-    <div class="btns"><a class="btn solid" href="${SITE.instagramDm}" target="_blank" rel="noopener">Scrivimi su Instagram</a>${whatsapp}</div>
+    <p>Rispondo personalmente a ogni messaggio. Seguimi su Instagram e scrivimi in privato: indicami data, luogo e tipo di evento.</p>
+    <div class="btns"><a class="btn solid" href="${SITE.instagram}" target="_blank" rel="noopener">Vai al mio Instagram ${esc(SITE.handle)}</a>${whatsapp}</div>
   </div>
 </main>`;
 

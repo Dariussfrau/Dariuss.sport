@@ -93,6 +93,8 @@ p{margin:0}
 .mmeta{font-size:13px;color:var(--muted)}
 .mlink{font:600 13px/1 var(--display);color:var(--green);text-decoration:none}
 a.mlink:hover,.mteam:hover .mlink{text-decoration:underline}
+.team-photo{margin:32px 0 0;border-radius:10px;overflow:hidden;background:#e6e0d4;box-shadow:0 18px 40px rgba(30,58,30,.14)}
+.team-photo img{display:block;width:100%;height:auto;aspect-ratio:1333/750;object-fit:cover}
 .team-head{display:flex;align-items:center;gap:24px;padding-top:36px}
 .team-head .d-head{padding-block:0}
 .team-head .d-head h1{margin-top:10px}
@@ -188,7 +190,8 @@ section.block{padding-block:56px;border-top:1px solid var(--line)}
 .row:hover h3{color:var(--green)}
 
 .about{display:grid;grid-template-columns:1fr 1fr;gap:48px}
-.bio{font-family:var(--serif);font-size:19px;line-height:1.55;color:#2c372e;max-width:52ch;margin-top:18px}
+.bio{display:grid;gap:14px;margin-top:18px;max-width:56ch}
+.bio p{font-family:var(--serif);font-size:19px;line-height:1.6;color:#2c372e}
 .kit{margin:0}
 .kit div{display:grid;grid-template-columns:110px minmax(0,1fr);gap:16px;padding-block:14px;border-bottom:1px solid var(--line);font-size:14px}
 .kit div:first-child{border-top:1px solid var(--line)}
@@ -293,6 +296,8 @@ section.block{padding-block:56px;border-top:1px solid var(--line)}
   .mrow{grid-template-columns:minmax(0,1fr)}
   .mside{justify-content:flex-start}
   .team-head{gap:16px;padding-top:24px}
+  .team-photo{margin-top:20px;border-radius:8px}
+  .team-photo img{aspect-ratio:4/3}
   .cta{padding:24px 20px}
   .team-head .jersey{width:68px;height:68px}
   .brand-in{padding-block:14px 22px}

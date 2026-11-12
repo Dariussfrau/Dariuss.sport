@@ -96,7 +96,7 @@ export const onRequestGet = withErrors(async ({ env, request }) => {
   <section class="block" id="chi-sono"><div class="wrap about">
     <div>
       <div class="eyebrow">Chi sono</div>
-      <p class="bio">${esc(SITE.bio)}</p>
+      <div class="bio">${SITE.bio.map((p) => `<p>${esc(p)}</p>`).join("")}</div>
       <div class="btns"><a class="btn solid" href="${SITE.instagram}" target="_blank" rel="noopener">Seguimi su Instagram</a><a class="btn" href="/contatti">Richiedi un servizio</a></div>
     </div>
     <dl class="kit">${SITE.kit.map(([k, items]) => `<div><dt>${esc(k)}</dt><dd>${items.map((i) => `<span>${esc(i)}</span>`).join("")}</dd></div>`).join("")}</dl>

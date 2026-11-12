@@ -14,13 +14,20 @@ export const onRequestGet = withErrors(async ({ env, request }) => {
   const team = esc(SITE.team.name);
 
   const body = `<main class="wrap listing team">
+  <figure class="team-photo">
+    <picture>
+      <source media="(max-width: 760px)" srcset="/assets/villaperuccio-squadra.jpg" width="1000" height="750">
+      <img src="/assets/villaperuccio-squadra-larga.jpg" width="1333" height="750" fetchpriority="high"
+        alt="La squadra dell'ASD Villaperuccio festeggia in campo, con i tifosi in tribuna alle spalle">
+    </picture>
+  </figure>
   <div class="team-head">
     ${jersey(96)}
     <div class="d-head"><div class="eyebrow">La squadra che seguo</div><h1>${team}</h1><p>La stagione raccontata da bordo campo: partite, risultati, classifica e album fotografici.</p></div>
   </div>
   <div class="team-stripe" aria-hidden="true"></div>
   ${next || last ? `<div class="mcards">${next ? matchCard(next, "Prossima partita") : ""}${last ? matchCard(last, "Ultimo risultato") : ""}</div>` : ""}
-  <div class="sec-head"><h2>Partite</h2><span>${matches.length ? `${matches.length} in calendario` : ""}</span></div>
+  <div class="sec-head"><h2>Partite</h2><a href="${SITE.team.calendar}" target="_blank" rel="noopener">Calendario completo su Tuttocampo ↗</a></div>
   ${matches.length ? `<ul class="mlist">${matches.map(matchRow).join("")}</ul>` : `<p class="empty">Il calendario arriva presto.</p>`}
   <div class="sec-head standings-head"><h2>Classifica</h2><span>Seconda Categoria · Girone B</span></div>
   ${standingsTable(standings)}
