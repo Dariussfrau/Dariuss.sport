@@ -78,7 +78,8 @@ p{margin:0}
 /* Villaperuccio: riquadri partita. Giallo e rosso (colori di maglia) solo come accento. */
 :root{--team-y:#F6CF2A;--team-r:#E0262B}
 .matchband{border-top:1px solid var(--line);padding-block:32px}
-.matchband-in{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:stretch}
+.matchband-in{display:grid;grid-template-columns:auto minmax(0,560px);justify-content:start;gap:20px 32px;align-items:stretch}
+.cal-cta{margin-bottom:24px}
 .mteam{display:flex;align-items:center;gap:14px;text-decoration:none;padding-right:12px}
 .mteam > span{display:grid;gap:5px}
 .mteam b{font:800 22px/1.1 var(--display);color:var(--forest)}

@@ -19,7 +19,8 @@ export const onRequestGet = withErrors(async ({ env, request }) => {
   ]);
   const week = await photoOfTheWeek(DB);
   const note = week ? await getSettings(DB, ["week_title", "week_text"]) : {};
-  const { next, last } = pickMatches(matches);
+  // In home solo l'ultimo risultato: la prossima partita si vede nella pagina Villaperuccio.
+  const { last } = pickMatches(matches);
   const latest = albums.results[0];
   const origin = new URL(request.url).origin;
 
@@ -41,11 +42,10 @@ export const onRequestGet = withErrors(async ({ env, request }) => {
     feature = `<div class="feature"><div class="cover tall">${emptyCover}</div><div class="cap"><span>Il primo album arriva presto.</span></div></div>`;
   }
 
-  const matchBand = next || last
+  const matchBand = last
     ? `<section class="matchband"><div class="wrap matchband-in">
     <a class="mteam" href="/villaperuccio">${jersey(64)}<span><span class="eyebrow">Seguo il</span><b>${esc(SITE.team.name)}</b><span class="mlink">La stagione →</span></span></a>
-    ${next ? matchCard(next, "Prossima partita") : ""}
-    ${last ? matchCard(last, "Ultimo risultato") : ""}
+    ${matchCard(last, "Ultimo risultato")}
   </div></section>`
     : "";
 

@@ -32,8 +32,8 @@ export const onRequestGet = withErrors(async ({ env, request }) => {
   </div>
   <div class="team-stripe" aria-hidden="true"></div>
   ${next || last ? `<div class="mcards">${next ? matchCard(next, "Prossima partita") : ""}${last ? matchCard(last, "Ultimo risultato") : ""}</div>` : ""}
-  <div class="sec-head"><h2>Partite</h2><a href="/villaperuccio/calendario">Calendario completo →</a></div>
-  ${matches.length ? `<ul class="mlist">${matches.map(matchRow).join("")}</ul>` : `<p class="empty">Il calendario arriva presto.</p>`}
+  <div class="cal-cta"><a class="btn solid" href="/villaperuccio/calendario">Calendario completo</a></div>
+  ${matches.length ? `<ul class="mlist">${matches.map(matchRow).join("")}</ul>` : ""}
   <div class="sec-head standings-head" id="classifica"><h2>Classifica</h2><span>Seconda Categoria · Girone B</span></div>
   ${standingsTable(standings)}
 </main>`;
