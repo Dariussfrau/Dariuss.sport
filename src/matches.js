@@ -1,5 +1,6 @@
 import { SITE } from "./config.js";
 import { esc, formatDate } from "./util.js";
+import { nextFromCalendar } from "./calendar.js";
 
 // Data di oggi in Italia, "2026-11-10".
 export function todayRome() {
@@ -18,13 +19,14 @@ export async function loadMatches(DB) {
 const played = (m) => m.score_us != null && m.score_them != null;
 
 // Prossima partita (la più vicina ancora da giocare) e ultimo risultato.
+// Se nel pannello non c'è una partita in arrivo più vicina, la prossima viene dal calendario ufficiale.
 export function pickMatches(matches) {
   const today = todayRome();
   const upcoming = matches.filter((m) => !played(m) && m.date >= today);
-  return {
-    next: upcoming[upcoming.length - 1] || null,
-    last: matches.find(played) || null,
-  };
+  const entered = upcoming[upcoming.length - 1] || null;
+  const official = nextFromCalendar(today, matches);
+  const next = entered && (!official || Date.parse(entered.date) <= Date.parse(official.date) + 864e5) ? entered : official || entered;
+  return { next, last: matches.find(played) || null };
 }
 
 // Squadre e punteggio nell'ordine casa – trasferta.

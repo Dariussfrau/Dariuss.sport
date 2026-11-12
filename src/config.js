@@ -15,11 +15,7 @@ export const SITE = {
   // Numero WhatsApp con prefisso internazionale e senza spazi, es. "393331234567". Vuoto = pulsante nascosto.
   whatsapp: "",
   // Squadra seguita. Maglia di casa: rossa con banda gialla centrale.
-  team: {
-    name: "Villaperuccio", yellow: "#F6CF2A", red: "#E0262B",
-    // Calendario ufficiale del girone su Tuttocampo.
-    calendar: "https://www.tuttocampo.it/Sardegna/CI/SecondaCategoria/GironeB/Calendario",
-  },
+  team: { name: "Villaperuccio", yellow: "#F6CF2A", red: "#E0262B" },
   // Servizi della pagina Contatti: tutti "su richiesta".
   services: [
     ["Partite", "Il racconto fotografico completo della gara, da bordo campo: azioni, esultanze, panchina. Album online con download in HD."],

@@ -3,7 +3,7 @@ import { getDb } from "../src/db.js";
 // Mappa del sito per i motori di ricerca: pagine fisse, album e articoli pubblicati.
 export async function onRequestGet({ env, request }) {
   const origin = new URL(request.url).origin;
-  const urls = [["/", ""], ["/album", ""], ["/articoli", ""], ["/villaperuccio", ""], ["/contatti", ""], ["/portfolio", ""]];
+  const urls = [["/", ""], ["/album", ""], ["/articoli", ""], ["/villaperuccio", ""], ["/villaperuccio/calendario", ""], ["/contatti", ""], ["/portfolio", ""]];
   try {
     const DB = await getDb(env);
     const [albums, articles] = await Promise.all([

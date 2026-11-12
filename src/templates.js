@@ -8,7 +8,7 @@ export const logo = (tag = "a", attrs = 'href="/"') =>
   `<${tag} class="logo" ${attrs} aria-label="${SITE.name}, home"><span class="d">D.</span><span class="s">Sport</span></${tag}>`;
 
 // Da aumentare a ogni modifica di site.css / site.js: obbliga i browser a scaricare la versione nuova.
-export const ASSET_VERSION = "9";
+export const ASSET_VERSION = "10";
 
 const MENU = [["home", "/", "Home"], ["portfolio", "/portfolio", "Portfolio"], ["album", "/album", "Album"], ["articoli", "/articoli", "Articoli"], ["villaperuccio", "/villaperuccio", "Villaperuccio"], ["chi-sono", "/#chi-sono", "Chi sono"], ["contatti", "/contatti", "Contatti"]];
 

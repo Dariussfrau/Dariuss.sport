@@ -93,6 +93,49 @@ p{margin:0}
 .mmeta{font-size:13px;color:var(--muted)}
 .mlink{font:600 13px/1 var(--display);color:var(--green);text-decoration:none}
 a.mlink:hover,.mteam:hover .mlink{text-decoration:underline}
+.team-bar{display:flex;justify-content:space-between;align-items:center;gap:12px 20px;flex-wrap:wrap;padding-top:28px}
+.team-actions{display:flex;gap:10px;flex-wrap:wrap}
+#classifica,#prossima{scroll-margin-top:90px}
+
+/* Calendario della stagione */
+.cal-info{display:flex;flex-wrap:wrap;align-items:center;gap:12px 28px;padding:16px 18px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.45);font-size:14px;color:var(--muted);margin-bottom:12px}
+.cal-info b{color:var(--forest);font-weight:600;margin-right:4px}
+.cal-info .btn{margin-left:auto}
+.cal-leg{margin-top:40px}
+.cal-leg .sec-head{margin-bottom:12px}
+.cal-list{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.cal-item{border-bottom:1px solid var(--line)}
+.cal-item summary{display:grid;grid-template-columns:52px 150px minmax(0,1fr) auto;gap:6px 18px;align-items:center;padding:14px 10px;cursor:pointer;list-style:none;border-radius:6px}
+.cal-item summary::-webkit-details-marker{display:none}
+.cal-item summary::after{content:"";width:9px;height:9px;border-right:2px solid var(--sage);border-bottom:2px solid var(--sage);transform:rotate(45deg);margin:0 6px 4px 0;transition:transform .2s;grid-column:5;grid-row:1}
+.cal-item details[open] summary::after{transform:rotate(-135deg);margin-bottom:-4px}
+.cal-item summary:hover{background:rgba(67,112,63,.06)}
+.cal-n{font:800 22px/1 var(--display);color:var(--green);font-variant-numeric:tabular-nums}
+.cal-when{display:grid;font:600 15px/1.25 var(--display);color:var(--forest)}
+.cal-when small{font:400 12px/1.4 var(--body);color:var(--sage)}
+.cal-teams{font:600 16px/1.35 var(--display);color:var(--forest);min-width:0}
+.cal-teams b.us{font-weight:800}
+.cal-teams .dash{color:var(--sage);font-weight:400;margin:0 8px}
+.cal-side{display:flex;gap:8px;align-items:center;justify-content:flex-end}
+.chip.home{background:var(--green);border-color:var(--green);color:var(--cream)}
+.chip.next{background:var(--team-y);border-color:var(--team-y);color:#3a2c00}
+.cal-res{font:800 18px/1 var(--display);font-variant-numeric:tabular-nums;color:var(--forest);padding:6px 10px;border-radius:8px;background:rgba(30,58,30,.07)}
+.cal-res.o-v{background:var(--green);color:var(--cream)}
+.cal-res.o-s{background:rgba(163,58,42,.12);color:var(--danger)}
+.cal-item.past summary{opacity:.62}
+.cal-item.is-next{background:rgba(246,207,42,.16);box-shadow:inset 5px 0 0 var(--team-r)}
+.cal-item.is-rest .cal-teams{font-weight:500;color:var(--muted)}
+.cal-body{padding:4px 10px 20px 80px;display:grid;gap:10px;font-size:14px;color:var(--muted)}
+.cal-venue{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;color:var(--forest);font-weight:500}
+.cal-venue a{font:600 13px/1 var(--display);color:var(--green);text-decoration:none;padding-block:6px}
+.cal-note{font-size:13px}
+.cal-h{font:600 11px/1 var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--sage);margin-top:6px}
+.cal-others{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:6px 24px}
+.cal-others li{display:flex;justify-content:space-between;gap:12px;padding-block:5px;border-bottom:1px dashed var(--line);color:#2c372e}
+.cal-others small{color:var(--sage);white-space:nowrap;font-variant-numeric:tabular-nums}
+.cal-others b.us{color:var(--forest)}
+.cal-source{font-size:12px;color:var(--sage);margin-top:28px}
+
 .team-photo{margin:32px 0 0;border-radius:10px;overflow:hidden;background:#e6e0d4;box-shadow:0 18px 40px rgba(30,58,30,.14)}
 .team-photo img{display:block;width:100%;height:auto;aspect-ratio:1333/750;object-fit:cover}
 .team-head{display:flex;align-items:center;gap:24px;padding-top:36px}
@@ -297,6 +340,17 @@ section.block{padding-block:56px;border-top:1px solid var(--line)}
   .mside{justify-content:flex-start}
   .team-head{gap:16px;padding-top:24px}
   .team-photo{margin-top:20px;border-radius:8px}
+  .team-bar{padding-top:18px}
+  .team-actions .btn{flex:1;padding-inline:14px}
+  .cal-info .btn{margin-left:0;width:100%}
+  .cal-item summary{grid-template-columns:36px minmax(0,1fr) auto 14px;gap:4px 10px;padding:12px 6px}
+  .cal-item summary::after{grid-column:4;grid-row:1 / span 2;align-self:center;margin:0}
+  .cal-item details[open] summary::after{margin:0}
+  .cal-n{grid-row:1 / span 2;font-size:19px}
+  .cal-when{grid-column:2;grid-row:1;display:flex;gap:8px;align-items:baseline}
+  .cal-teams{grid-column:2 / span 2;grid-row:2;font-size:15px}
+  .cal-side{grid-column:3;grid-row:1;justify-content:flex-end}
+  .cal-body{padding:2px 6px 18px 52px}
   .team-photo img{aspect-ratio:4/3}
   .cta{padding:24px 20px}
   .team-head .jersey{width:68px;height:68px}

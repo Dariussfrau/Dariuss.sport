@@ -1,6 +1,7 @@
 import { SITE } from "../src/config.js";
 import { getDb } from "../src/db.js";
 import { jersey, loadMatches, matchCard, matchRow, pickMatches } from "../src/matches.js";
+import { SEASON } from "../src/calendar.js";
 import { loadStandings, standingsTable } from "../src/standings.js";
 import { page, withErrors } from "../src/templates.js";
 import { esc, html } from "../src/util.js";
@@ -14,6 +15,10 @@ export const onRequestGet = withErrors(async ({ env, request }) => {
   const team = esc(SITE.team.name);
 
   const body = `<main class="wrap listing team">
+  <div class="team-bar">
+    <span class="eyebrow">ASD Villaperuccio · Seconda Categoria · Girone B</span>
+    <div class="team-actions"><a class="btn solid" href="/villaperuccio/calendario">Calendario ${SEASON}</a><a class="btn" href="#classifica">Classifica</a></div>
+  </div>
   <figure class="team-photo">
     <picture>
       <source media="(max-width: 760px)" srcset="/assets/villaperuccio-squadra.jpg" width="1000" height="750">
@@ -27,9 +32,9 @@ export const onRequestGet = withErrors(async ({ env, request }) => {
   </div>
   <div class="team-stripe" aria-hidden="true"></div>
   ${next || last ? `<div class="mcards">${next ? matchCard(next, "Prossima partita") : ""}${last ? matchCard(last, "Ultimo risultato") : ""}</div>` : ""}
-  <div class="sec-head"><h2>Partite</h2><a href="${SITE.team.calendar}" target="_blank" rel="noopener">Calendario completo su Tuttocampo ↗</a></div>
+  <div class="sec-head"><h2>Partite</h2><a href="/villaperuccio/calendario">Calendario completo →</a></div>
   ${matches.length ? `<ul class="mlist">${matches.map(matchRow).join("")}</ul>` : `<p class="empty">Il calendario arriva presto.</p>`}
-  <div class="sec-head standings-head"><h2>Classifica</h2><span>Seconda Categoria · Girone B</span></div>
+  <div class="sec-head standings-head" id="classifica"><h2>Classifica</h2><span>Seconda Categoria · Girone B</span></div>
   ${standingsTable(standings)}
 </main>`;
 
